@@ -88,8 +88,11 @@ export const CampaignProvider = (props) => {
     };
 
     const getNextQuestion = () => {
-        if (currentQuestion < questions.length - 1)
+        if (currentQuestion < questions.length - 1){
             setCurrentQuestion(currentQuestion + 1);
+            return false;
+        }
+        return true;
     };
 
     const getPreviousQuestion = () => {

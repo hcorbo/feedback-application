@@ -4,7 +4,7 @@ import ButtonContainer from '../ButtonContainer';
 import ModalDropdown from 'react-native-modal-dropdown'
 import { CampaignContext } from '../contexts/CampaignContext'
 
-const SingleAnswerQuestionScreen = ({ question }) => {
+const SingleAnswerQuestionScreen = ({ question,navigation }) => {
   const [answer, setAnswer] = useState([]);
   var data = question.QuestionAnswers 
 
@@ -47,7 +47,7 @@ const SingleAnswerQuestionScreen = ({ question }) => {
          />}
       </View>
       
-      <ButtonContainer answer={answer} />
+      <ButtonContainer answer={answer} navigation={navigation}/>
     </View>
   )
 };

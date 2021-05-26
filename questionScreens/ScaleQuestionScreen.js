@@ -4,7 +4,7 @@ import ButtonContainer from '../ButtonContainer';
 import Slider from '@react-native-community/slider';
 import { CampaignContext } from '../contexts/CampaignContext'
 
-const ScaleQuestionScreen = ({ question }) => {
+const ScaleQuestionScreen = ({ question,navigation }) => {
   const [answer, setAnswer] = useState(0);
 
   return (
@@ -26,7 +26,7 @@ const ScaleQuestionScreen = ({ question }) => {
           <Text>1</Text>
         </View>
       </View>
-      <ButtonContainer answer={answer} />
+      <ButtonContainer answer={answer} navigation={navigation}/>
     </View>
   )
 };
