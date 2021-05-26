@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   text_footer: {
-    color: '#05375a',
+    color: '#fff',
     fontSize: 18
   },
   action: {
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   text_question: {
-    color: "black",
+    color: "#fff",
     paddingBottom: 40,
     fontSize: 20,
     alignSelf: 'center',

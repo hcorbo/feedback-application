@@ -86,5 +86,6 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
     fontSize: 20,
     alignSelf: 'center',
+    color: '#fff',
   }
 });
