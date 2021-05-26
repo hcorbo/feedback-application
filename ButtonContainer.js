@@ -4,7 +4,7 @@ import { CampaignContext } from './contexts/CampaignContext'
 import { LinearGradient } from 'expo-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const ButtonContainer = ({ answer }) => {
+const ButtonContainer = ({ answer,navigation}) => {
 
     const { addAnswer, getNextQuestion, getPreviousQuestion } = useContext(CampaignContext);
 
@@ -25,7 +25,11 @@ const ButtonContainer = ({ answer }) => {
                     <Text style={styles.textButton}>Previous </Text>
                 </LinearGradient>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => { addAnswer(answer); getNextQuestion(); }}>
+            <TouchableOpacity onPress={() => { 
+                addAnswer(answer); 
+                if(getNextQuestion()) navigation.navigate('EndScreen'); 
+                else getNextQuestion();
+            }}>
                 <LinearGradient
                     colors={['#ededed', '#d3d3d3']}
                     style={styles.button}

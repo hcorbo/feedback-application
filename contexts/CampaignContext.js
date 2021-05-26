@@ -30,6 +30,7 @@ export const CampaignProvider = (props) => {
     ]);
 
     const getQuestions = async () => {
+      
         const campaignId = await AsyncStorage.getItem('CampaignID');
         console.log(campaignId);
 
@@ -44,18 +45,64 @@ export const CampaignProvider = (props) => {
             });
     }
 
+    const saveAnswer = async () => {
+        var data = [];
+        for (var i = 0; i < userResponses.length; i++) {
+            if (i == userResponses.length - 1) {
+                try {
+                    let response = await fetch("https://si-main-server.herokuapp.com/api/response/save", {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json; charset=UTF-8',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "CampaignId": campaignId,
+                            "UserResponses": data
+                        })
+                    });
+                    var json = await response.json();
+                    console.log(json)
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+           if (userResponses[i].CustomAnswer != null) {
+               data.push({
+                   "QuestionId": userResponses[i].QuestionId,
+                   "AnswerId": -1,
+                   "CustomAnswer": userResponses[i].CustomAnswer
+               })
+           } else {
+                data.push({
+                    "QuestionId": userResponses[i].QuestionId,
+                    "AnswerId": userResponses[i].AnswerId,
+                    "CustomAnswer": null
+                })
+           }
+        }
+        console.log(JSON.stringify({
+            "CampaignId": campaignId,
+            "UserResponses": data
+        }))
+      
+    }
 
     const addAnswer = (answer) => {
         let rows;
         Array.isArray(answer) ? rows = [...userResponses, ...answer] : rows = [...userResponses, answer];
-        console.log("Duzina" + answer.length);
+        /*console.log("Duzina" + answer.length);
         console.log(answer)
+        console.log(rows)*/
         setUserResponses(rows);
     };
 
     const getNextQuestion = () => {
-        if (currentQuestion < questions.length - 1)
+        if (currentQuestion < questions.length - 1){
             setCurrentQuestion(currentQuestion + 1);
+            return false;
+        }
+        return true;
     };
 
     const getPreviousQuestion = () => {
@@ -74,6 +121,7 @@ export const CampaignProvider = (props) => {
         addAnswer,
         getNextQuestion,
         getPreviousQuestion,
+        saveAnswer
     }
 
     return (

@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import ButtonContainer from '../ButtonContainer';
 
-const TextQuestionScreen = ({ question }) => {
+const TextQuestionScreen = ({ question,navigation}) => {
   const [answerText, setAnswerText] = useState({});
 
   return (
@@ -14,7 +14,7 @@ const TextQuestionScreen = ({ question }) => {
           onChangeText={(value) => { setAnswerText(value); }}
           style = {styles.input}></TextInput>
       </View>
-      <ButtonContainer answer={{"QuestionId": question.QuestionId, "AnswerId": null, "CustomAnswer": answerText}} />
+      <ButtonContainer answer={{"QuestionId": question.QuestionId, "AnswerId": null, "CustomAnswer": answerText}} navigation={navigation} />
     </View>
   )
 };

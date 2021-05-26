@@ -4,7 +4,7 @@ import ButtonContainer from '../ButtonContainer';
 import { RadioButton } from 'react-native-paper';
 
 
-const MultipleChoiceQuestionScreen = ({ question }) => {
+const MultipleChoiceQuestionScreen = ({ question, navigation}) => {
   const [answers, setAnswers] = useState([]);
   var [checked, setChecked] = React.useState([]);
 
@@ -35,7 +35,7 @@ const MultipleChoiceQuestionScreen = ({ question }) => {
           }               
         </View>
      </View>
-      <ButtonContainer answer={answers} />
+      <ButtonContainer answer={answers} navigation={navigation}/>
     </View>
   )
 };
