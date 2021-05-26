@@ -44,38 +44,45 @@ export const CampaignProvider = (props) => {
 
     const saveAnswer = async () => {
         var data = [];
-       userResponses.forEach(element => {
-           if (element.CustomAnswer != null) {
+        for (var i = 0; i < userResponses.length; i++) {
+            if (i == userResponses.length - 1) {
+                try {
+                    let response = await fetch("https://si-main-server.herokuapp.com/api/response/save", {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json; charset=UTF-8',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "CampaignId": campaignId,
+                            "UserResponses": data
+                        })
+                    });
+                    var json = await response.json();
+                    console.log(json)
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+           if (userResponses[i].CustomAnswer != null) {
                data.push({
-                   "QuestionId": element.QuestionId,
-                   "AnswerId": null,
-                   "CustomAnswer": element.CustomAnswer
+                   "QuestionId": userResponses[i].QuestionId,
+                   "AnswerId": -1,
+                   "CustomAnswer": userResponses[i].CustomAnswer
                })
            } else {
                 data.push({
-                    "QuestionId": element.QuestionId,
-                    "AnswerId": element.AnswerId,
+                    "QuestionId": userResponses[i].QuestionId,
+                    "AnswerId": userResponses[i].AnswerId,
                     "CustomAnswer": null
                 })
            }
-       });
-
-      try{
-        let response= await fetch("https://si-main-server.herokuapp.com/api/response/save", {
-            method: 'POST',
-            headers: {
-                'Content-type':'application/json; charset=UTF=8',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                "CampaignId" : campaignId,
-                "UserResponses" : [data]
-            }) 
-        });
-        var json = await response.json();
-      } catch (error) {
-        console.error(error);
-      }
+        }
+        console.log(JSON.stringify({
+            "CampaignId": campaignId,
+            "UserResponses": data
+        }))
+      
     }
 
     const addAnswer = (answer) => {

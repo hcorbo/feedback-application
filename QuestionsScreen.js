@@ -34,16 +34,16 @@ const QuestionsScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         {questions[currentQuestion].QuestionType == "Single" &&
-          <SingleAnswerQuestionScreen question={questions[currentQuestion], navigation=navigation} />
+          <SingleAnswerQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
         }
         {questions[currentQuestion].QuestionType == "Scale" &&
-          <ScaleQuestionScreen question={questions[currentQuestion], navigation=navigation} />
+          <ScaleQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
         }
         {questions[currentQuestion].QuestionType == "Text" &&
-          <TextQuestionScreen question={questions[currentQuestion], navigation=navigation} />
+          <TextQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
         }
         {questions[currentQuestion].QuestionType == "Multiple" &&
-          <MultipleChoiceQuestionScreen question={questions[currentQuestion], navigation=navigation} />
+          <MultipleChoiceQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
         }
       </View>
     </View>
