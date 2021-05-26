@@ -46,6 +46,8 @@ export const CampaignProvider = (props) => {
     }
 
     const saveAnswer = async () => {
+        const campaignId = await AsyncStorage.getItem('CampaignID');
+
         var data = [];
         for (var i = 0; i < userResponses.length; i++) {
             if (i == userResponses.length - 1) {

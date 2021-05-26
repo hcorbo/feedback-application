@@ -5,7 +5,6 @@ import Slider from '@react-native-community/slider';
 import { CampaignContext } from '../contexts/CampaignContext'
 
 const ScaleQuestionScreen = ({ question,navigation }) => {
-  const [answer, setAnswer] = useState({});
   const [state, setState] = useState(0)
 
   return (
@@ -14,18 +13,18 @@ const ScaleQuestionScreen = ({ question,navigation }) => {
         <Text style={styles1.text}>{question.QuestionText}</Text>
         <Slider
           style={{ width: 300, height: 40, alignSelf: 'center', }}
-          minimumValue={0}
-          maximumValue={1}
+          minimumValue={1}
+          maximumValue={10}
           thumbTintColor="#f0eff3"
-          onValueChange={(value) => setAnswer(value)}
-          value={answer}
+          onValueChange={(value) => setState(value.toFixed(0))}
+          value={state}
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor="#000000"
         />
         <View style={styles1.question}>
-          <Text>0</Text>
-          <Text> {state.toFixed(2)}</Text>
           <Text>1</Text>
+          <Text> {state}</Text>
+          <Text>10</Text>
         </View>
       </View>
       <ButtonContainer answer={{ "QuestionId": question.QuestionId, "AnswerId": -1, "CustomAnswer": state }} navigation={navigation}/>
