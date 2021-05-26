@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{ useContext }from 'react';
 import {
   View,
   Text,
@@ -12,9 +12,10 @@ import {
 import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import ButtonContainer from './ButtonContainer';
-
-const HomeScreen = ({ navigation }) => {
+import { CampaignContext } from './contexts/CampaignContext'
+ 
+const EndScreen = ({ navigation }) => {
+    const { saveAnswer } = useContext(CampaignContext);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -25,13 +26,13 @@ const HomeScreen = ({ navigation }) => {
           style={styles.logo}
         />
       </View>
-      <View style={styles.header}>      
-        <TouchableOpacity onPress={()=> navigation.navigate('QuestionsScreen')}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={()=> saveAnswer()}>
           <LinearGradient
             colors={['#ededed', '#d3d3d3']}
             style={styles.start}
           >
-            <Text style={styles.textStart}>Start Answering</Text>
+            <Text style={styles.textStart}>Spasi odgovore</Text>
             <MaterialIcons
               name="navigate-next"
               color="#000000"
@@ -43,12 +44,12 @@ const HomeScreen = ({ navigation }) => {
     </View>
   );
 };
-
-export default HomeScreen;
-
+ 
+export default EndScreen;
+ 
 const { height } = Dimensions.get("screen");
 const height_logo = height * 0.2;
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     View, 
     Text, 
@@ -6,8 +6,6 @@ import {
     TextInput,
     Platform,
     StyleSheet ,
-    StatusBar,
-    Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import {LinearGradient} from 'expo-linear-gradient';
@@ -15,7 +13,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { RadioButton } from 'react-native-paper';
 
+import {AsyncStorage} from 'react-native';
+
 const SignInScreen = ({navigation}) => {
+
+    
 
     const [data, setData] = React.useState({
         IPAdress: '',
@@ -27,6 +29,66 @@ const SignInScreen = ({navigation}) => {
         isValidInstallationCode: true,
         isValidPing: true,
     });
+
+    useEffect( () => {
+        getData();
+    }, [])
+
+    const storeData = async () => {
+        try{
+            console.log('kod ' + data.installationCode);
+            await AsyncStorage.setItem('IPAdress', data.IPAdress);
+            await AsyncStorage.setItem('InstallationCode', data.installationCode);
+            await AsyncStorage.setItem('PingInterval', data.ping);
+            await AsyncStorage.setItem('QuestionType', checked);
+        }
+        catch(e){
+            console.log('Spasavanje u AsyncStorage neuspjesno!');
+            console.log(e);
+        }
+    }
+
+    const getData = async () => {
+        try{
+            const IPAdressValue = await AsyncStorage.getItem('IPAdress');
+            const InstallationCodeValue = await AsyncStorage.getItem('InstallationCode');
+            const PingIntervalValue = await  AsyncStorage.getItem('PingInterval');
+            const QuestionType = await  AsyncStorage.getItem('QuestionType');
+
+            
+
+            if(IPAdressValue != null && InstallationCodeValue != null && PingIntervalValue != null){
+
+                setData({
+                    ...data,
+                    IPAdress: IPAdressValue,
+                    installationCode: InstallationCodeValue,
+                    ping: PingIntervalValue,
+                    check_textInputChange: true,
+                    isValidUser: true
+                });
+
+                console.log('Vrijednost iz AsyncStorage: \n');
+                console.log('Ip adresa iz AS: ' + IPAdressValue);    
+                console.log('Installation code iz AS ' + InstallationCodeValue);    
+                console.log('Ping interval iz AS: ' + PingIntervalValue);
+                console.log('Question type iz AS: ' + QuestionType);
+                setData({
+                    ...data,
+                    IPAdress: IPAdressValue,
+                    installationCode: InstallationCodeValue,
+                    ping: PingIntervalValue
+                });
+                if(QuestionType !== 'independent') {
+                    setChecked("dependent");
+                }
+            }
+        }
+        catch(e){
+            console.log('Dobavljanje iz AsyncStorage neuspjesno!')
+            console.log(e);
+        }
+    }
 
     const textInputChange = (val) => {
         if( val.trim().length >= 4 ) {
@@ -116,7 +178,9 @@ const SignInScreen = ({navigation}) => {
                         color: "black"
                     }]}
                     autoCapitalize="none"
+                    value={data.IPAdress}
                     onChangeText={(val) => textInputChange(val)}
+                    value={data.IPAdress}
                 />
                 {data.check_textInputChange ? 
                 <Animatable.View
@@ -151,7 +215,9 @@ const SignInScreen = ({navigation}) => {
                         color: "black"
                     }]}
                     autoCapitalize="none"
+                    value={data.installationCode}
                     onChangeText={(val) => handleInstallationCodeChange(val)}
+                    value={data.installationCode}
                 />
                 <TouchableOpacity
                     onPress={updateSecureTextEntry}
@@ -188,7 +254,9 @@ const SignInScreen = ({navigation}) => {
                         color: "black"
                     }]}
                     autoCapitalize="none"
+                    value={data.ping}
                     onChangeText={(val) => pingInputChange(val)}
+                    value={data.ping}
                 />
                 {data.check_pingInputChange ? 
                 <Animatable.View
@@ -232,7 +300,30 @@ const SignInScreen = ({navigation}) => {
             <View style={styles.button}>
                 <TouchableOpacity
                     style={styles.signIn}
-                    onPress={() => {navigation.navigate("HomeScreen")}}
+                    onPress={() => {
+                        /*
+                        //cekamo da proradi server da testiramo
+                            try {
+                              const response = await axios.post(URL_SERVERA,{
+                                IPAdress:data.IPAdress,
+                                installationCode:data.installationCode
+                              });        
+                              if(response.status == 200){
+                                navigation.navigate("HomeScreen");
+                              }else{
+                                alert("Greška!");
+                              }
+                            } catch (error) {
+                              alert("Greška!");
+                            }
+                          */
+                        navigation.navigate("HomeScreen");
+                        storeData();
+                        
+                }
+                
+                    
+                }
                 >
                 <LinearGradient
                     colors={['#08d4c4', '#01ab9d']}
