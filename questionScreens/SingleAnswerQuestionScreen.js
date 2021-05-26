@@ -24,9 +24,10 @@ const SingleAnswerQuestionScreen = ({ question,navigation }) => {
   return (
     <View>
       <View style={styles.question}>
-        <Text>{question.QuestionText}</Text>
+        <Text style={styles.questionText}>{question.QuestionText}</Text>
       
-        {question.QuestionAnswers[0].Answer.IsApicture === true ?  
+        {question.QuestionAnswers[0].Answer.IsApicture === true ? 
+          <View style={styles.flatlist}>  
              <FlatList
                 data={data}
                 renderItem={renderItem}
@@ -34,6 +35,7 @@ const SingleAnswerQuestionScreen = ({ question,navigation }) => {
                 style={{flex: 1}}
                 numColumns={2}
               />
+            </View>
         : <ModalDropdown
            options={data}
            renderRowText={(options) => {return options.Answer.AnswerText}}
@@ -56,9 +58,11 @@ export default SingleAnswerQuestionScreen;
 
 const styles = StyleSheet.create({
   question: {
-    height: '80%',
+    height: '90%',
     justifyContent: 'center',
-    margin: 10
+  },
+  flatlist: {
+    flexDirection: 'row',
   },
   dropdown: {
     backgroundColor: '#ffffff',
@@ -67,15 +71,20 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    fontSize: 15,
+    fontSize: 18,
   },
   dropdownTextStyle: {
     color: '#000000',
     fontSize: 15
   },
   image: {
-    margin: 10,
+    margin: 5,
     height: 100,
     width: 100,
   },
+  questionText: {
+    paddingBottom: 40,
+    fontSize: 20,
+    alignSelf: 'center',
+  }
 });

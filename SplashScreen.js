@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { 
     View, 
     Text, 
@@ -6,17 +6,35 @@ import {
     Dimensions,
     StyleSheet,
     StatusBar,
-    Image
+    Image,
+    AsyncStorage
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from '@react-navigation/native';
 
-//merge
 
 const SplashScreen = ({navigation}) => {
     const { colors } = useTheme();
+    const [isConfigFileCreated, setConfigFileStatus] = React.useState(false);
+
+    useEffect( () => {
+        checkConfigFile();
+    }, [])
+
+    const checkConfigFile = async() => {
+        try{
+            const deviceID = await AsyncStorage.getItem('DeviceId');
+            if(deviceID != null){
+                setConfigFileStatus(true);
+            }
+        }
+        catch(e){
+            console.log('Dobavljanje iz AsyncStorage neuspjesno!')
+            console.log(e);
+        }
+    }
 
     return (
       <View style={styles.container}>
@@ -39,7 +57,12 @@ const SplashScreen = ({navigation}) => {
             }]}>We collect your opinions!</Text>
             <Text style={styles.text}>Get started and setup your device</Text>
             <View style={styles.button}>
-            <TouchableOpacity onPress={()=>navigation.navigate('SignInScreen')}>
+            <TouchableOpacity onPress={()=> {
+                if(isConfigFileCreated)
+                    navigation.navigate('HomeScreen')
+                else
+                    navigation.navigate('SignInScreen')
+            }}>
                 <LinearGradient
                     colors={['#08d4c4', '#01ab9d']}
                     style={styles.signIn}

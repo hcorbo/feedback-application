@@ -1,9 +1,9 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 
 export const CampaignContext = React.createContext();
 
 export const CampaignProvider = (props) => {
-    const [campaignId, setCampaignId] = useState(1);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [name, setName] = useState("test");
     const [startDate, setStartDate] = useState("DateTime");
@@ -30,12 +30,15 @@ export const CampaignProvider = (props) => {
     ]);
 
     const getQuestions = async () => {
-        fetch("https://si-main-server.herokuapp.com/api/campaign/1", {
+      
+        const campaignId = await AsyncStorage.getItem('CampaignID');
+        console.log(campaignId);
+
+        fetch("https://si-main-server.herokuapp.com/api/campaign/" + campaignId, {
             method: 'GET',
         }).then(res => res.json())
             .then(res => {
                 console.log("response");
-                setCampaignId(res.CampaignID);
                 setName(res.Name);
                 setEndDate(res.EndDate);
                 setQuestions(res.Questions);
@@ -108,7 +111,6 @@ export const CampaignProvider = (props) => {
     };
 
     const values = {
-        campaignId,
         name,
         startDate,
         endDate,

@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 2,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   logo: {
     width: height_logo,

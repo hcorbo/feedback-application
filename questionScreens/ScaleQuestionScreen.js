@@ -11,13 +11,14 @@ const ScaleQuestionScreen = ({ question,navigation }) => {
   return (
     <View>
       <View style={styles.question}>
-        <Text>{question.QuestionText}</Text>
+        <Text style={styles1.text}>{question.QuestionText}</Text>
         <Slider
-          style={{ width: 300, height: 40 }}
+          style={{ width: 300, height: 40, alignSelf: 'center', }}
           minimumValue={0}
           maximumValue={1}
-          onValueChange={(value) => setState(value)}
-          value={state}
+          thumbTintColor="#f0eff3"
+          onValueChange={(value) => setAnswer(value)}
+          value={answer}
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor="#000000"
         />
@@ -37,7 +38,8 @@ export default ScaleQuestionScreen;
 const styles = StyleSheet.create({
   question: {
     height: '90%',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    padding: 15,
   },
 });
 const styles1 = StyleSheet.create({
@@ -46,4 +48,9 @@ const styles1 = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
+  text: {
+    paddingBottom: 40,
+    fontSize: 20,
+    alignSelf: 'center',
+  }
 });

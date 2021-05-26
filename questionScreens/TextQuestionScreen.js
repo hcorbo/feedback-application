@@ -30,10 +30,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: 300,
     height: 100,
-    borderRadius: 10
+    borderRadius: 10,
+    fontSize: 16,
   },
   questionText: {
-    color: 'white',
-    fontSize: 18
+    paddingBottom: 40,
+    fontSize: 20,
+    alignSelf: 'center',
+    color: 'black'
   }
 });

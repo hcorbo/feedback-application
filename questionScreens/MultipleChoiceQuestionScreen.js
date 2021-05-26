@@ -62,7 +62,9 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   text_question: {
-    color: "#fff",
-    fontSize: 25
+    color: "black",
+    paddingBottom: 40,
+    fontSize: 20,
+    alignSelf: 'center',
   }
 });
