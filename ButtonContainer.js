@@ -42,6 +42,17 @@ const ButtonContainer = ({ answer,navigation}) => {
                     />
                 </LinearGradient>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => { 
+                addAnswer(answer); 
+                navigation.navigate('EndScreen'); 
+            }}>
+                <LinearGradient
+                    colors={['#ededed', '#d3d3d3']}
+                    style={styles.button}
+                >
+                    <Text style={styles.textButton}>End</Text>
+                </LinearGradient>
+            </TouchableOpacity>
 
         </View>
     )
