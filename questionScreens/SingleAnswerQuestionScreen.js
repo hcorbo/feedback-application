@@ -1,20 +1,29 @@
 import React, { useState, useContext } from 'react'
-import { Text, View, StyleSheet, FlatList, Image, TouchableWithoutFeedback, SafeAreaView} from 'react-native';
+import { Text, View, StyleSheet, FlatList, Image, TouchableWithoutFeedback, SafeAreaView } from 'react-native';
 import ButtonContainer from '../ButtonContainer';
 import ModalDropdown from 'react-native-modal-dropdown'
 import { CampaignContext } from '../contexts/CampaignContext'
 
-const SingleAnswerQuestionScreen = ({ question,navigation }) => {
+const SingleAnswerQuestionScreen = ({ question, navigation }) => {
   const [answer, setAnswer] = useState({});
-  var data = question.QuestionAnswers 
+  const [previousValue,setPreviousValue] = useState(false);
+  var data = question.QuestionAnswers;
 
-  const Item = ({item}) =>  (
-      <TouchableWithoutFeedback onPress={() => setAnswer(item.AnswerId)} >
-        <Image
-          style={styles.image}
-          source={{uri: `data:image/gif;base64,${item.Answer.AnswerText}`}}         
-        /> 
-      </TouchableWithoutFeedback>
+  const { addAnswer, getNextQuestion, userResponses} = useContext(CampaignContext);
+
+  const nextQuestion = (answerId) => {
+    addAnswer({ "QuestionId": question.QuestionId, "AnswerId": answerId, "CustomAnswer": null });
+    if (getNextQuestion()) navigation.navigate('EndScreen');
+    else getNextQuestion();
+  };
+
+  const Item = ({ item }) => (
+    <TouchableWithoutFeedback onPress={() => { setAnswer(item.AnswerId); }} >
+      <Image
+        style={styles.image}
+        source={{ uri: `data:image/gif;base64,${item.Answer.AnswerText}` }}
+      />
+    </TouchableWithoutFeedback>
   )
 
   const renderItem = ({ item }) => (
@@ -25,31 +34,31 @@ const SingleAnswerQuestionScreen = ({ question,navigation }) => {
     <View>
       <View style={styles.question}>
         <Text style={styles.questionText}>{question.QuestionText}</Text>
-      
-        {question.QuestionAnswers[0].Answer.IsApicture === true ? 
-          <View style={styles.flatlist}>  
-             <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.AnswerId}
-                style={{flex: 1}}
-                numColumns={2}
-              />
-            </View>
-        : <ModalDropdown
-           options={data}
-           renderRowText={(options) => {return options.Answer.AnswerText}}
-           renderButtonText={(options) => {return options.Answer.AnswerText}}
-           style={styles.dropdown}
-           textStyle={styles.text}
-           defaultValue={'Izaberite..'}
-           isFullWidth={true}
-           dropdownTextStyle={styles.dropdownTextStyle}
-           onSelect={(index,value) => {setAnswer(value.AnswerId);}}
-         />}
+
+        {question.QuestionAnswers[0].Answer.IsApicture === true ?
+          <View style={styles.flatlist}>
+            <FlatList
+              data={data}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.AnswerId}
+              style={{ flex: 1 }}
+              numColumns={2}
+            />
+          </View>
+          : <ModalDropdown
+            options={data}
+            renderRowText={(options) => { return options.Answer.AnswerText }}
+            renderButtonText={(options) => { return options.Answer.AnswerText }}
+            style={styles.dropdown}
+            textStyle={styles.text}
+            defaultValue={'Izaberite..'}
+            isFullWidth={true}
+            dropdownTextStyle={styles.dropdownTextStyle}
+            onSelect={async(index, value) => { nextQuestion(value.AnswerId); }}
+          />}
       </View>
-      
-      <ButtonContainer answer={{ "QuestionId": question.QuestionId, "AnswerId": answer, "CustomAnswer": null }} navigation={navigation}/>
+
+      <ButtonContainer answer={null} navigation={navigation} />
     </View>
   )
 };

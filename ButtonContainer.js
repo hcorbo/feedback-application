@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const ButtonContainer = ({ answer,navigation}) => {
 
-    const { addAnswer, getNextQuestion, getPreviousQuestion } = useContext(CampaignContext);
+    const { addAnswer, getNextQuestion, getPreviousQuestion, questions, currentQuestion } = useContext(CampaignContext);
 
 
     return (
@@ -26,7 +26,7 @@ const ButtonContainer = ({ answer,navigation}) => {
                 </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { 
-                addAnswer(answer); 
+                if(questions[currentQuestion].QuestionType === "Multiple")  addAnswer(answer); 
                 if(getNextQuestion()) navigation.navigate('EndScreen'); 
                 else getNextQuestion();
             }}>
@@ -43,7 +43,7 @@ const ButtonContainer = ({ answer,navigation}) => {
                 </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { 
-                addAnswer(answer); 
+            //    addAnswer(answer); 
                 navigation.navigate('EndScreen'); 
             }}>
                 <LinearGradient

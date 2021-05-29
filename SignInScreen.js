@@ -297,7 +297,7 @@ const SignInScreen = ({navigation}) => {
                                     console.log('Spasavanje u AsyncStorage neuspjesno!');
                                     console.log(e);
                                 }
-                                navigation.navigate("HomeScreen");
+                                navigation.navigate("QuestionsScreen");
                             }else{
                                 alert("Greška!");
                             }
