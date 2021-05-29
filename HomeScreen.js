@@ -47,7 +47,7 @@ const HomeScreen = ({ navigation }) => {
 export default HomeScreen;
 
 const { height } = Dimensions.get("screen");
-const height_logo = height * 0.2;
+const height_logo = height * 0.17;
 
 const styles = StyleSheet.create({
   container: {
