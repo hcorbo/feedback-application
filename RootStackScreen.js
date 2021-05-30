@@ -16,7 +16,6 @@ const RootStackScreen = ({ navigation }) => (
         <RootStack.Navigator headerMode='none'>
             <RootStack.Screen name="SplashScreen" component={SplashScreen} />
             <RootStack.Screen name="SignInScreen" component={SignInScreen} />
-            <RootStack.Screen name="HomeScreen" component={HomeScreen} />
             <RootStack.Screen name="QuestionsScreen" component={QuestionsScreen} />
             <RootStack.Screen name="EndScreen" component={EndScreen} />
         </RootStack.Navigator>
