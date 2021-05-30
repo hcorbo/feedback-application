@@ -47,6 +47,7 @@ export const CampaignProvider = (props) => {
 
     const saveAnswer = async () => {
         const campaignId = await AsyncStorage.getItem('CampaignID');
+        const deviceId = await AsyncStorage.getItem('DeviceId');
 
         var data = [];
         for (var i = 0; i < userResponses.length; i++) {
@@ -60,6 +61,7 @@ export const CampaignProvider = (props) => {
                         },
                         body: JSON.stringify({
                             "CampaignId": campaignId,
+                            "DeviceId": deviceId,
                             "UserResponses": data
                         })
                     });
