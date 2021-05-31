@@ -34,7 +34,7 @@ export const CampaignProvider = (props) => {
         const campaignId = await AsyncStorage.getItem('CampaignID');
         console.log(campaignId);
 
-        fetch("https://si-main-server.herokuapp.com/api/campaign/" + campaignId, {
+        fetch("https://si-projekat2.herokuapp.com/api/campaign/" + campaignId, {
             method: 'GET',
         }).then(res => res.json())
             .then(res => {
@@ -47,12 +47,12 @@ export const CampaignProvider = (props) => {
 
     const saveAnswer = async () => {
         const campaignId = await AsyncStorage.getItem('CampaignID');
-
+        
         var data = [];
         for (var i = 0; i < userResponses.length; i++) {
             if (i == userResponses.length - 1) {
                 try {
-                    let response = await fetch("https://si-main-server.herokuapp.com/api/response/save", {
+                    let response = await fetch("https://si-projekat2.herokuapp.com/api/response/save", {
                         method: 'POST',
                         headers: {
                             'Content-type': 'application/json; charset=UTF-8',
