@@ -16,6 +16,7 @@ import { RadioButton } from 'react-native-paper';
 import {AsyncStorage} from 'react-native';
 import axios from 'axios';
 
+
 const SignInScreen = ({navigation}) => {
 
     const [data, setData] = React.useState({
@@ -129,6 +130,7 @@ const SignInScreen = ({navigation}) => {
     }
 
     const [checked, setChecked] = React.useState('independent');
+
 
     return (
       <View style={styles.container}>
@@ -283,7 +285,7 @@ const SignInScreen = ({navigation}) => {
                         
                         try {
                             let URL = data.IPAdress + "api/device/activate/" + data.installationCode;
-                            const response = await axios.get(URL);       
+                            const response = await axios.post(URL,data);       
                             if(response.status == 200 && response.data.Name && response.data.DeviceId && response.data.CampaignID){                                
                                 try{
                                     await AsyncStorage.setItem('IPAdress', data.IPAdress);

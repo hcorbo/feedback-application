@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const ButtonContainer = ({ answer,navigation}) => {
 
-    const { addAnswer, getNextQuestion, getPreviousQuestion } = useContext(CampaignContext);
+    const { addAnswer, getNextQuestion, getPreviousQuestion, getQuestions, independentState, setCurrentQuestion, addDependentAnswer, timerFunction } = useContext(CampaignContext);
 
 
     return (
@@ -26,9 +26,24 @@ const ButtonContainer = ({ answer,navigation}) => {
                 </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { 
-                addAnswer(answer); 
-                if(getNextQuestion()) navigation.navigate('EndScreen'); 
+                addAnswer(answer);
+                if(getNextQuestion() && independentState) { //TREBA Uslov da je to lista nezavisnih pitanja
+                    //setCurrentQuestion(0);
+                    //timerFunction();
+                    getQuestions(); 
+                     
+                } 
+                else if(getNextQuestion()) {
+                    navigation.navigate('EndScreen'); 
+                }
                 else getNextQuestion();
+               /* if(getNextQuestion() ) { //TREBA Uslov da je to lista nezavisnih pitanja
+                    
+                
+                    navigation.navigate('EndScreen'); 
+                }
+                else getNextQuestion();*/
+
             }}>
                 <LinearGradient
                     colors={['#ededed', '#d3d3d3']}
