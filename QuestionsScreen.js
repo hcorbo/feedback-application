@@ -15,7 +15,8 @@ import SingleAnswerQuestionScreen from './questionScreens/SingleAnswerQuestionSc
 import ScaleQuestionScreen from './questionScreens/ScaleQuestionScreen'
 import TextQuestionScreen from './questionScreens/TextQuestionScreen'
 import MultipleChoiceQuestionScreen from './questionScreens/MultipleChoiceQuestionScreen'
-
+import { LinearGradient } from 'expo-linear-gradient';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 
 const QuestionsScreen = ({ navigation }) => {
@@ -33,6 +34,23 @@ const QuestionsScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <View style={styles.endButton}>
+      <TouchableOpacity onPress={() => {
+        //    addAnswer(answer); 
+        navigation.navigate('EndScreen');
+      }}>
+        <LinearGradient
+          colors={['#009387', '#009387']}
+          style={styles.button}
+        >
+          <MaterialIcons
+            name="exit-to-app"
+            color="#000000"
+            size={30}
+          />
+        </LinearGradient>
+      </TouchableOpacity>
+      </View>
         {questions[currentQuestion].QuestionType == "Single" &&
           <SingleAnswerQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
         }
@@ -58,7 +76,8 @@ const height_logo = height * 0.2;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#009387'
+    backgroundColor: '#009387',
+    paddingBottom: 25,
   },
   header: {
     flex: 2,
@@ -68,5 +87,17 @@ const styles = StyleSheet.create({
   logo: {
     width: height_logo,
     height: height_logo
-  }
+  }, 
+  endButton: {
+   paddingTop: 60,
+   alignSelf: "flex-end",
+   color: "black",
+   paddingRight: 10,
+  },
+  button: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+},
 });
