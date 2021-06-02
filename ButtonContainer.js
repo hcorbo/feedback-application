@@ -32,7 +32,7 @@ const ButtonContainer = ({ answer,navigation}) => {
                 } else {
                     addAnswer(answer);
                 }
-                if( independentState) setQuestions(dependentQuestions);
+                //if( independentState) setQuestions(dependentQuestions);
                 if(getNextQuestion() && independentState) { 
                     //setCurrentQuestion(0);
                     //timerFunction();

@@ -101,6 +101,7 @@ export const CampaignProvider = (props) => {
                 
                 if(res.length != 0) {
                     if( (globalState && res.length!= dependentQuestions.length) || !globalState) {
+                        setQuestions(res);
                         setPrvoUcitavanjeZavisnih(prvoUcitavanjeZavisnih+1);
                         setDependentQuestions(res);
                         setGlobalState(true);
