@@ -6,6 +6,27 @@ import { CampaignContext } from '../contexts/CampaignContext'
 
 const ScaleQuestionScreen = ({ question, navigation }) => {
   const [state, setState] = useState(0)
+  const [previousValue,setPreviousValue] = useState(false);
+  const { addAnswer, getNextQuestion, userResponses } = useContext(CampaignContext);
+
+  let number = 1;
+  let response = userResponses.find(response => response.QuestionId == question.QuestionId);
+  try {
+    number = Number(response.CustomAnswer);
+  } catch(error) {
+
+  }
+
+  if(!previousValue) {
+    setPreviousValue(true);
+    setState(number);
+  }
+
+  const nextQuestion = () => {
+    addAnswer({ "QuestionId": question.QuestionId, "AnswerId": -1, "CustomAnswer": state });
+    if (getNextQuestion()) navigation.navigate('EndScreen');
+    else getNextQuestion();
+  };
 
   return (
     <View>
@@ -28,7 +49,11 @@ const ScaleQuestionScreen = ({ question, navigation }) => {
           <Text>10</Text>
         </View>
       </View>
+
       <ButtonContainer answer={{ "QuestionId": question.QuestionId, "AnswerId": -1, "CustomAnswer": state }} navigation={navigation} />
+
+      <ButtonContainer answer={null} navigation={navigation} />
+
     </View>
   )
 };

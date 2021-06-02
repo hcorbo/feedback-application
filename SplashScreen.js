@@ -59,7 +59,7 @@ const SplashScreen = ({navigation}) => {
             <View style={styles.button}>
             <TouchableOpacity onPress={()=> {
                 if(isConfigFileCreated)
-                    navigation.navigate('HomeScreen')
+                    navigation.navigate('QuestionsScreen');
                 else
                     navigation.navigate('SignInScreen')
             }}>

@@ -15,7 +15,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { CampaignContext } from './contexts/CampaignContext'
  
 const EndScreen = ({ navigation }) => {
-    const { saveAnswer } = useContext(CampaignContext);
+    const { saveAnswer, saveDependentAnswer } = useContext(CampaignContext);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -27,7 +27,7 @@ const EndScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.header}>
-        <TouchableOpacity onPress={()=> saveAnswer()}>
+        <TouchableOpacity onPress={()=> {saveAnswer(); saveDependentAnswer()}}>
           <LinearGradient
             colors={['#ededed', '#d3d3d3']}
             style={styles.start}

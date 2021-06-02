@@ -1,13 +1,25 @@
-import React, { useState } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useContext } from 'react'
+import { Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import ButtonContainer from '../ButtonContainer';
 import {LinearGradient} from "expo-linear-gradient";
 import * as Animatable from 'react-native-animatable';
+import { RadioButton } from 'react-native-paper';
+import { CampaignContext } from '../contexts/CampaignContext'
 
-const MultipleChoiceQuestionScreen = ({ question, navigation}) => {
-  const [answers, setAnswers] = useState([]);
+const MultipleChoiceQuestionScreen = ({ question, navigation }) => {
+  const [answers, setAnswers] = useState([{ "QuestionId": question.QuestionId, "AnswerId": 0, "CustomAnswer": null }]);
+  const [previousValue, setPreviousValue] = useSta
   var [checked, setChecked] = React.useState([]);
   const [answersCount, setAnswersCount] = useState(question.QuestionAnswers);
+
+  const { userResponses } = useContext(CampaignContext);
+
+  if (!previousValue) {
+    setPreviousValue(true);
+    let rows = userResponses.filter(response => response.QuestionId == question.QuestionId);
+    rows.forEach(answer => setChecked(prevState => ([...prevState, answer.AnswerId])));
+    setAnswers(prevState => ([...prevState, ...rows]));
+  }
 
   return (
       <View>

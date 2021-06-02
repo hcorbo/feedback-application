@@ -1,21 +1,31 @@
 import React, { useState, useContext } from 'react'
+
 import { Text, View, Dimensions, StyleSheet, FlatList, Image, TouchableWithoutFeedback, SafeAreaView} from 'react-native';
 import ButtonContainer from '../ButtonContainer';
 import ModalDropdown from 'react-native-modal-dropdown'
 import { CampaignContext } from '../contexts/CampaignContext'
 import * as Animatable from 'react-native-animatable';
 
-const SingleAnswerQuestionScreen = ({ question,navigation }) => {
+const SingleAnswerQuestionScreen = ({ question, navigation }) => {
   const [answer, setAnswer] = useState({});
-  var data = question.QuestionAnswers 
+  const [previousValue,setPreviousValue] = useState(false);
+  var data = question.QuestionAnswers;
 
-  const Item = ({item}) =>  (
-      <TouchableWithoutFeedback onPress={() => setAnswer(item.AnswerId)} >
-        <Image
-          style={styles.image}
-          source={{uri: `data:image/gif;base64,${item.Answer.AnswerText}`}}         
-        /> 
-      </TouchableWithoutFeedback>
+  const { addAnswer, getNextQuestion, userResponses} = useContext(CampaignContext);
+
+  const nextQuestion = (answerId) => {
+    addAnswer({ "QuestionId": question.QuestionId, "AnswerId": answerId, "CustomAnswer": null });
+    if (getNextQuestion()) navigation.navigate('EndScreen');
+    else getNextQuestion();
+  };
+
+  const Item = ({ item }) => (
+    <TouchableWithoutFeedback onPress={() => { setAnswer(item.AnswerId); }} >
+      <Image
+        style={styles.image}
+        source={{ uri: `data:image/gif;base64,${item.Answer.AnswerText}` }}
+      />
+    </TouchableWithoutFeedback>
   )
 
   const renderItem = ({ item }) => (
@@ -67,8 +77,6 @@ const SingleAnswerQuestionScreen = ({ question,navigation }) => {
       <View style={styles.footer}>
       <ButtonContainer answer={{ "QuestionId": question.QuestionId, "AnswerId": answer, "CustomAnswer": null }} navigation={navigation}/>
       </View>
-
-      
     </View>
   )
 };

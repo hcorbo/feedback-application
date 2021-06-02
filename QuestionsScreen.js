@@ -15,16 +15,20 @@ import SingleAnswerQuestionScreen from './questionScreens/SingleAnswerQuestionSc
 import ScaleQuestionScreen from './questionScreens/ScaleQuestionScreen'
 import TextQuestionScreen from './questionScreens/TextQuestionScreen'
 import MultipleChoiceQuestionScreen from './questionScreens/MultipleChoiceQuestionScreen'
+import { useEffect } from 'react';
 
 
 
 const QuestionsScreen = ({ navigation }) => {
-
+  
   const [campaign, setCampaign] = useState(false);
 
-  const { getQuestions, questions, currentQuestion, getNextQuestion, getPreviousQuestion } = useContext(CampaignContext);
-
-
+  const { timerFunction, componentDidMount, getQuestions, getDependentQuestions, questions, currentQuestion, getNextQuestion, getPreviousQuestion, independentState } = useContext(CampaignContext);
+ 
+  //Dodati if kad se provjeri da li je na sigIn odabrano independent i postavi independentState na true
+  //if(independentState)
+  //  timerFunction();
+  
   if (!campaign) {
     getQuestions();
     setCampaign(true);
