@@ -57,8 +57,6 @@ export const CampaignProvider = (props) => {
 
 
     const getQuestions = async () => {
-      
-        
         const campaignId = await AsyncStorage.getItem('CampaignID');
         console.log(campaignId);
         console.log("Pozvano getQuestions");
@@ -117,6 +115,7 @@ export const CampaignProvider = (props) => {
 
     /*const saveAnswer = async () => {
         const campaignId = await AsyncStorage.getItem('CampaignID');
+        const deviceId = await AsyncStorage.getItem('DeviceId');
 
         var data = [];
         for (var i = 0; i < userResponses.length; i++) {
@@ -130,6 +129,7 @@ export const CampaignProvider = (props) => {
                         },
                         body: JSON.stringify({
                             "CampaignId": campaignId,
+                            "DeviceId": deviceId,
                             "UserResponses": data
                         })
                     });
@@ -139,25 +139,24 @@ export const CampaignProvider = (props) => {
                     console.error(error);
                 }
             }
-           if (userResponses[i].CustomAnswer != null) {
-               data.push({
-                   "QuestionId": userResponses[i].QuestionId,
-                   "AnswerId": -1,
-                   "CustomAnswer": userResponses[i].CustomAnswer
-               })
-           } else {
+            if (userResponses[i].CustomAnswer != null) {
+                data.push({
+                    "QuestionId": userResponses[i].QuestionId,
+                    "AnswerId": -1,
+                    "CustomAnswer": userResponses[i].CustomAnswer
+                })
+            } else {
                 data.push({
                     "QuestionId": userResponses[i].QuestionId,
                     "AnswerId": userResponses[i].AnswerId,
                     "CustomAnswer": null
                 })
-           }
+            }
         }
         console.log(JSON.stringify({
             "CampaignId": campaignId,
             "UserResponses": data
-        }))
-      
+        }))  
     }*/
 
     const saveAnswer = async () => {
@@ -299,12 +298,17 @@ export const CampaignProvider = (props) => {
     }
 
     const addAnswer = (answer) => {
-        let rows;
-        Array.isArray(answer) ? rows = [...userResponses, ...answer] : rows = [...userResponses, answer];
-        /*console.log("Duzina" + answer.length);
-        console.log(answer)
-        console.log(rows)*/
-        setUserResponses(rows);
+        let id;
+        Array.isArray(answer) ? id = answer[0].QuestionId : id = answer.QuestionId;
+
+        let rows = userResponses;
+        rows = rows.filter(response => response.QuestionId != id);
+
+        if (Array.isArray(answer)) answer.shift();
+
+        let rows2;
+        Array.isArray(answer) ? rows2 = [...rows, ...answer] : rows2 = [...rows, answer];
+        setUserResponses(rows2);
     };
 
     
@@ -315,7 +319,7 @@ export const CampaignProvider = (props) => {
     };
 
     const getNextQuestion = () => {
-        if (currentQuestion < questions.length - 1){
+        if (currentQuestion < questions.length - 1) {
             setCurrentQuestion(currentQuestion + 1);
             return false;
         }
