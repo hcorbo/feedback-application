@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
-
+import {insertAnswer,setupDatabaseAsync,getAnswers} from "../Database.js"
 export const CampaignContext = React.createContext();
 
 export const CampaignProvider = (props) => {
@@ -42,14 +42,40 @@ export const CampaignProvider = (props) => {
                 setName(res.Name);
                 setEndDate(res.EndDate);
                 setQuestions(res.Questions);
+                setupDatabaseAsync();
+               
             });
     }
 
     const saveAnswer = async () => {
         const campaignId = await AsyncStorage.getItem('CampaignID');
         const deviceId = await AsyncStorage.getItem('DeviceId');
-
+        var dat = []; 
+        getAnswers().then()
         var data = [];
+        console.log("LEN" + dat.length);
+        if(dat.length > 0){
+            try{
+            let response = await fetch("https://si-main-server.herokuapp.com/api/device/response/save", {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json; charset=UTF-8',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "CampaignId": campaignId,
+                            "Duration" : "12",
+                            "DeviceId": deviceId,
+                            "UserResponses": dat
+                        })
+                    });
+                    var json = await response.json();
+                    console.log(json)
+                } catch (error) {
+                   
+                    console.error(error);
+                }
+        }else{
         for (var i = 0; i < userResponses.length; i++) {
             if (i == userResponses.length - 1) {
                 try {
@@ -61,6 +87,7 @@ export const CampaignProvider = (props) => {
                         },
                         body: JSON.stringify({
                             "CampaignId": campaignId,
+                            "Duration" : "12",
                             "DeviceId": deviceId,
                             "UserResponses": data
                         })
@@ -68,6 +95,8 @@ export const CampaignProvider = (props) => {
                     var json = await response.json();
                     console.log(json)
                 } catch (error) {
+                    console.log("USER:" + userResponses);
+                    insertAnswer(userResponses);
                     console.error(error);
                 }
             }
@@ -85,11 +114,7 @@ export const CampaignProvider = (props) => {
                 })
             }
         }
-        console.log(JSON.stringify({
-            "CampaignId": campaignId,
-            "UserResponses": data
-        }))
-
+    }
     }
 
     const addAnswer = (answer) => {
