@@ -13,7 +13,6 @@ const getAnswers = async () =>{
    
     await db.transaction(async function(tx) {
         await tx.executeSql("SELECT * FROM Answer",[],(_, { rows:{_array} }) => {
-            
             for(var i = 0;i < _array.length;i++){
                 data.push({
                     "QuestionId": _array[i].QuestionId,
