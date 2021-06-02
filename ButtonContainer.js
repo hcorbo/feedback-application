@@ -26,22 +26,26 @@ const ButtonContainer = ({ answer,navigation}) => {
                 </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { 
-                if(questions[currentQuestion].QuestionType === "Multiple")  addAnswer(answer); 
-                if(independentState){
-                    addDependentAnswer(answer);
-                } else {
-                    addAnswer(answer);
-                }
-                //if( independentState) setQuestions(dependentQuestions);
-                if(getNextQuestion() && independentState) { 
-                    //setCurrentQuestion(0);
-                    //timerFunction();
-                    getQuestions(); 
+                // if(independentState){
+                //     if(questions[currentQuestion].QuestionType === "Multiple")  addDependentAnswer(answer); 
+                //     else addDependentAnswer(answer);
+                // } else {
+                //     if(questions[currentQuestion].QuestionType === "Multiple")  addAnswer(answer); 
+                //     else addAnswer(answer);
+                // }
+                // //if( independentState) setQuestions(dependentQuestions);
+                // if(getNextQuestion() && independentState) { 
+                //     console.log("DOSAO SAM TU")
+                //     //setCurrentQuestion(0);
+                //     //timerFunction();
+                //     getQuestions(); 
                      
-                } 
-                else if(getNextQuestion()) {
-                    navigation.navigate('EndScreen'); 
-                }
+                // } 
+                // else if(getNextQuestion()) {
+                //     navigation.navigate('EndScreen'); 
+                // }
+                if(questions[currentQuestion].QuestionType === "Multiple")  addAnswer(answer); 
+                if(getNextQuestion()) navigation.navigate('EndScreen'); 
                 else getNextQuestion();
              
 

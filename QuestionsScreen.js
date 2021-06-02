@@ -27,7 +27,7 @@ const QuestionsScreen = ({ navigation }) => {
  
   //Dodati if kad se provjeri da li je na sigIn odabrano independent i postavi independentState na true
   //if(independentState)
-    timerFunction();
+  //  timerFunction();
   
   if (!campaign) {
     getQuestions();
