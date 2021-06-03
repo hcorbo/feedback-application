@@ -5,19 +5,19 @@ import Slider from "react-native-smooth-slider";
 import { CampaignContext } from '../contexts/CampaignContext'
 
 const ScaleQuestionScreen = ({ question, navigation }) => {
-  const [state, setState] = useState(0)
-  const [previousValue,setPreviousValue] = useState(false);
+  const [state, setState] = useState(1);
+  const [previousValue, setPreviousValue] = useState(false);
   const { addAnswer, getNextQuestion, userResponses } = useContext(CampaignContext);
 
   let number = 1;
   let response = userResponses.find(response => response.QuestionId == question.QuestionId);
   try {
     number = Number(response.CustomAnswer);
-  } catch(error) {
+  } catch (error) {
 
   }
 
-  if(!previousValue) {
+  if (!previousValue) {
     setPreviousValue(true);
     setState(number);
   }
@@ -37,10 +37,14 @@ const ScaleQuestionScreen = ({ question, navigation }) => {
             style={{ width: 300, height: 80, alignSelf: 'center', }}
             minimumValue={1}
             maximumValue={10}
-            thumbStyle={{width:30, height:50}}
-            trackStyle={{height:50}}
-            thumbTintColor="#ffffff"
+            thumbStyle={{ width: 30, height: 50 }}
+            trackStyle={{ height: 50 }}
+            value={Number(state)}
             onValueChange={(value) => setState(value.toFixed(0))}
+            onSlidingComplete={nextQuestion}
+            thumbTintColor="#f0eff3"
+            minimumTrackTintColor="#FFFFFF"
+            maximumTrackTintColor="#000000"
           />
         </View>
         <View style={styles1.question}>
@@ -49,9 +53,6 @@ const ScaleQuestionScreen = ({ question, navigation }) => {
           <Text>10</Text>
         </View>
       </View>
-
-      <ButtonContainer answer={{ "QuestionId": question.QuestionId, "AnswerId": -1, "CustomAnswer": state }} navigation={navigation} />
-
       <ButtonContainer answer={null} navigation={navigation} />
 
     </View>

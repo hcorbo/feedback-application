@@ -8,7 +8,7 @@ import { CampaignContext } from '../contexts/CampaignContext'
 
 const MultipleChoiceQuestionScreen = ({ question, navigation }) => {
   const [answers, setAnswers] = useState([{ "QuestionId": question.QuestionId, "AnswerId": 0, "CustomAnswer": null }]);
-  const [previousValue, setPreviousValue] = useSta
+  const [previousValue, setPreviousValue] = useState(false);
   var [checked, setChecked] = React.useState([]);
   const [answersCount, setAnswersCount] = useState(question.QuestionAnswers);
 
