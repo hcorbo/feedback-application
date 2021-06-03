@@ -27,19 +27,7 @@ const EndScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.header}>
-        <TouchableOpacity onPress={()=> {saveAnswer(); saveDependentAnswer()}}>
-          <LinearGradient
-            colors={['#ededed', '#d3d3d3']}
-            style={styles.start}
-          >
-            <Text style={styles.textStart}>Spasi odgovore</Text>
-            <MaterialIcons
-              name="navigate-next"
-              color="#000000"
-              size={20}
-            />
-          </LinearGradient>
-        </TouchableOpacity>
+        <Text style={styles.text}>Hvala Vam na izdvojenom vremenu!</Text>
       </View>
     </View>
   );
@@ -75,5 +63,11 @@ const styles = StyleSheet.create({
   textStart: {
     color: 'black',
     fontWeight: 'bold'
+  },
+  text:{
+    color: 'white',
+    fontSize: 24,
+    textAlign: 'center',
+    fontWeight: 'bold',
   }
 });

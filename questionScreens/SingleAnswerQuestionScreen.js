@@ -70,7 +70,7 @@ const SingleAnswerQuestionScreen = ({ question, navigation }) => {
            defaultValue={'Izaberite..'}
            isFullWidth={true}
            dropdownTextStyle={styles.dropdownTextStyle}
-           onSelect={(index,value) => {setAnswer(value.AnswerId);}}
+           onSelect={(index, value) => { nextQuestion(value.AnswerId); }}
          />}
       </Animatable.View>
       

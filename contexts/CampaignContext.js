@@ -334,6 +334,8 @@ export const CampaignProvider = (props) => {
             console.log("TRENUTNO STANJE " + currentQuestion)
             return false;
         }
+        saveAnswer();
+        saveDependentAnswer();
         return true;
     };
 
