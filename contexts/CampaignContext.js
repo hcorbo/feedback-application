@@ -67,8 +67,9 @@ export const CampaignProvider = (props) => {
      
 
     const getDependentQuestion = async () => {
+        const deviceId = await AsyncStorage.getItem('DeviceId');
         if(dependentQuestion == null && !dependentState) {
-            fetch("https://si-projekat2.herokuapp.com/api/device/dependent/get/1", {
+            fetch("https://si-projekat2.herokuapp.com/api/device/dependent/get/" + deviceId, {
                     method: 'GET',
                 }).then(res => res.json())
                     .then(res => {
@@ -150,9 +151,9 @@ export const CampaignProvider = (props) => {
 
     const getNextQuestion = () => {
         if (currentQuestion < questions.length - 1 || dependentState==true) {
-            if(questions[currentQuestion+1].QuestionId == dependentQuestion.QuestionId && !(currentQuestion < questions.length - 2))
+            if(dependentQuestion && questions[currentQuestion+1].QuestionId == dependentQuestion.QuestionId && !(currentQuestion < questions.length - 2))
                 return true;
-            if(questions[currentQuestion+1].QuestionId == dependentQuestion.QuestionId)
+            if(dependentQuestion && questions[currentQuestion+1].QuestionId == dependentQuestion.QuestionId)
                 setCurrentQuestion(currentQuestion+2);
             else if(dependentState!=true)
                 setCurrentQuestion(currentQuestion+1);
