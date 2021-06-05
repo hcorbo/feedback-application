@@ -51,6 +51,7 @@ const MultipleChoiceQuestionScreen = ({ question, navigation }) => {
                       {answer.Answer.IsAPicture &&
                       <Image
                           style={checked.includes(answer.AnswerId) ? [styles.button_image_pressed] : [styles.button_image_unpressed]}
+                          resizeMode="stretch"
                           source={{ uri: "data:image/png;base64," + answer.Answer.Base64 }}>
                       </Image>}
                     </TouchableOpacity>
