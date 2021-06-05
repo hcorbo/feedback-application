@@ -6,16 +6,15 @@ export const CampaignContext = React.createContext();
 export const CampaignProvider = (props) => {
     const timer = require('react-native-timer');
     const [ping, setPing] = useState(0);
-    const [prvoUcitavanjeZavisnih, setPrvoUcitavanjeZavisnih] = useState(0);
-    const [independentState, setIndependentState] = useState(false);
-    const [globalState, setGlobalState] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [dependentQuestion, setCurrentDependentQuestion] = useState([]);
     const [name, setName] = useState("test");
     const [startDate, setStartDate] = useState("DateTime");
     const [endDate, setEndDate] = useState("DateTime");
     const [userResponses, setUserResponses] = useState([]);
-    const [userDependentResponses, setUserDependentResponses] = useState([]);
+    const [dependentState, setDependentState] = useState(false); // da li se desilo dohvatanje dependent pitanja
+    const [dependentQuestion, setDependentQuestion] = useState(null);
+    
+    
     const [questions, setQuestions] = useState([{
         QuestionId: 1,
         QuestionType: "single-answer",
@@ -35,26 +34,7 @@ export const CampaignProvider = (props) => {
         ]
     },
     ]);
-    const [dependentQuestions, setDependentQuestions] = useState([{
-        QuestionId: 1,
-        QuestionType: "single-answer",
-        QuestionText: "Primjer pitanja",
-        IsDependent: false,
-        Data1: null, //ovaj podatak će biti razlicit od null kada pitanje bude zavisno odnosno IsDependend atribut bude true
-        Data2: null,
-        Data3: null,
-        QuestionAnswers: [
-            {
-                AnswerId: 1,
-                Answer: {
-                    AnswerText: "test",
-                    IsApicture: false
-                },
-            },
-        ]
-    },
-    ]);
-
+    const [questionForScreen, setQuestionForScreen] = useState(questions[currentQuestion]);
 
     const getQuestions = async () => {
         const campaignId = await AsyncStorage.getItem('CampaignID');
@@ -69,47 +49,69 @@ export const CampaignProvider = (props) => {
                 setName(res.Name);
                 setEndDate(res.EndDate);
                 setQuestions(res.Questions);
-                setIndependentState(false);
+                //setIndependentState(false);
             });
 
         const PingIntervalValue = await  AsyncStorage.getItem('PingInterval');
-        setPing(5000);
+        setPing(PingIntervalValue);
     }
 
 
     
     const timerFunction = () => {
         const timer = setTimeout(() => {
-            getDependentQuestions();
+            getDependentQuestion();
           }, parseFloat(ping));
           return () => clearTimeout(timer);
     }
 
      
 
-    const getDependentQuestions = async () => {
+    const getDependentQuestion = () => {
+        //console.log("depQuestion je ", dependentQuestion);
+        if(dependentQuestion == null && !dependentState) {
+            console.log("Dependent");
+            setDependentQuestion( {
+                "QuestionId": 6,
+                "QuestionType": "Scale",
+                "QuestionText": "Koliko ste zadovoljni cijenama?",
+                "IsDependent": false,
+                "Data1": null,
+                "Data2": null,
+                "Data3": null,
+                "QuestionAnswers": [
+                    {
+                        "QuestionId": 6,
+                        "AnswerId": 10,
+                        "Answer": {
+                            "AnswerId": 10,
+                            "AnswerText": "5",
+                            "IsAPicture": false,
+                            "Base64": null
+                        }
+                    }
+                ]
+            });
+            setDependentState(true);
+            console.log("Dep state je ", dependentState);
+        }
+        
+        /*async () => {
  
-        fetch("https://si-projekat2.herokuapp.com/api/question/dependents", {
+        fetch("https://si-projekat2.herokuapp.com/api/device/dependent/get/1", {
             method: 'GET',
         }).then(res => res.json())
             .then(res => {
                 console.log("DEPENDENT RESPONSE");
                 console.log("Ping" + ping);
-                console.log(dependentQuestions.length);
-                
-                if(res.length != 0) {
-                    if( (globalState && res.length!= dependentQuestions.length) || !globalState) {
-                        setQuestions(res);
-                        setPrvoUcitavanjeZavisnih(prvoUcitavanjeZavisnih+1);
-                        setDependentQuestions(res);
-                        setGlobalState(true);
-                        setIndependentState(true);
-                    }
-
-                    
-                } 
+                if(res != null && !dependentState) {
+                    setDependentQuestion(res);
+                    setDependentState(true);
+                }
                
-            });
+            });*/
+            
+
     }
 
 
@@ -250,7 +252,7 @@ export const CampaignProvider = (props) => {
       
     }*/
 
-    const saveDependentAnswer = async () => {
+    /*const saveDependentAnswer = async () => {
         const campaignId = await AsyncStorage.getItem('CampaignID');
         const deviceId = await AsyncStorage.getItem('DeviceId');
 
@@ -295,7 +297,7 @@ export const CampaignProvider = (props) => {
             "UserResponses": data
         }))
 
-    }
+    }*/
 
     const addAnswer = (answer) => {
         let id;
@@ -312,21 +314,6 @@ export const CampaignProvider = (props) => {
     };
 
     
-    const addDependentAnswer = (answer) => {
-        let id;
-        Array.isArray(answer) ? id = answer[0].QuestionId : id = answer.QuestionId;
-
-        let rows = userDependentResponses;
-        rows = rows.filter(response => response.QuestionId != id);
-
-        if (Array.isArray(answer)) answer.shift();
-
-        let rows2;
-        Array.isArray(answer) ? rows2 = [...rows, ...answer] : rows2 = [...rows, answer];
-        // let rows;
-        // Array.isArray(answer) ? rows = [...userDependentResponses, ...answer] : rows = [...userDependentResponses, answer];
-        setUserDependentResponses(rows);
-    };
 
     const getNextQuestion = () => {
         if (currentQuestion < questions.length - 1) {
@@ -356,6 +343,14 @@ export const CampaignProvider = (props) => {
             setCurrentQuestion(currentQuestion - 1);
     };
 
+    const chooseQuestionForScreen = () => {
+        if(!dependentQuestionShown && dependentState) {
+            setQuestionForScreen(dependentQuestion);
+          } else {
+            setQuestionForScreen(questions[currentQuestion]);
+          }
+    }
+
 
     const values = {
         name,
@@ -364,21 +359,21 @@ export const CampaignProvider = (props) => {
         questions,
         currentQuestion,
         userResponses,
-        userDependentResponses,
-        dependentQuestions,
+        dependentQuestion,
+        dependentState,
+        getDependentQuestion,
+        setDependentQuestion,
         getQuestions,
         setQuestions,
-        getDependentQuestions,
-        addDependentAnswer,
         addAnswer,
         getNextQuestion,
         getPreviousQuestion,
-        saveDependentAnswer,
         saveAnswer,
         timerFunction,
-        independentState,
         setCurrentQuestion,
-        resetUserData
+        resetUserData,
+        chooseQuestionForScreen,
+        questionForScreen
     }
 
     return (
