@@ -8,11 +8,13 @@ import HomeScreen from './HomeScreen';
 import QuestionsScreen from './QuestionsScreen';
 import EndScreen from './EndScreen';
 import { CampaignProvider } from './contexts/CampaignContext'
+import AlertComponent from './AlertComponent';
 
 const RootStack = createStackNavigator();
 
 const RootStackScreen = ({ navigation }) => (
     <CampaignProvider>
+        <AlertComponent/>
         <RootStack.Navigator headerMode='none'>
             <RootStack.Screen name="SplashScreen" component={SplashScreen} />
             <RootStack.Screen name="SignInScreen" component={SignInScreen} />

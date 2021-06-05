@@ -85,32 +85,43 @@ export const CampaignProvider = (props) => {
     }
 
 
+    const saveAnswerFromLocalData = async () => {
+        const campaignId = await AsyncStorage.getItem('CampaignID');
+        const deviceId = await AsyncStorage.getItem('DeviceId');
+        var localResponses = await AsyncStorage.getItem('UserResponses');
+
+
+        try {
+            let response = await fetch("https://si-projekat2.herokuapp.com/api/device/response/save", {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    "CampaignId": campaignId,
+                    "Duration": "12",
+                    "DeviceId": deviceId,
+                    "UserResponses": JSON.parse(localResponses)
+                })
+            });
+            var json = await response.json();
+            await AsyncStorage.setItem('UserResponses', JSON.stringify([]));
+            alert("Odgovori uspješno poslani na server!");
+            console.log(json)
+        } catch (error) {
+            console.error(error);
+        }
+
+    }
+
     const saveAnswer = async () => {
         const campaignId = await AsyncStorage.getItem('CampaignID');
         const deviceId = await AsyncStorage.getItem('DeviceId');
-
+        await AsyncStorage.setItem('UserResponses', JSON.stringify([]));
         var data = [];
+
         for (var i = 0; i < userResponses.length; i++) {
-            if (i == userResponses.length - 1) {
-                try {
-                    let response = await fetch("https://si-projekat2.herokuapp.com/api/device/response/save", {
-                        method: 'POST',
-                        headers: {
-                            'Content-type': 'application/json; charset=UTF-8',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            "CampaignId": campaignId,
-                            "DeviceId": deviceId,
-                            "UserResponses": data
-                        })
-                    });
-                    var json = await response.json();
-                    console.log(json)
-                } catch (error) {
-                    console.error(error);
-                }
-            }
             if (userResponses[i].CustomAnswer != null) {
                 data.push({
                     "QuestionId": userResponses[i].QuestionId,
@@ -125,12 +136,28 @@ export const CampaignProvider = (props) => {
                 })
             }
         }
-        console.log(JSON.stringify({
-            "CampaignId": campaignId,
-            "UserResponses": data
-        }))
-
+        try {
+            let response = await fetch("https://si-projekat2.herokuapp.com/api/device/response/save123", {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    "CampaignId": campaignId,
+                    "Duration": "12",
+                    "DeviceId": deviceId,
+                    "UserResponses": data
+                })
+            });
+            var json = await response.json();
+            console.log(json)
+        } catch (error) {
+            await AsyncStorage.setItem('UserResponses', JSON.stringify(userResponses));
+            alert("Odgovori su spaseni u lokalnoj bazi!");
+        }
     }
+
 
 
     const addAnswer = (answer) => {
@@ -198,7 +225,8 @@ export const CampaignProvider = (props) => {
         timerFunction,
         setCurrentQuestion,
         resetUserData,
-        setDependentState
+        setDependentState,
+        saveAnswerFromLocalData
     }
 
     return (
