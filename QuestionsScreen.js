@@ -22,13 +22,8 @@ import { useEffect } from 'react';
 const QuestionsScreen = ({ navigation }) => {
   
   const [campaign, setCampaign] = useState(false);
-  const [dependentQuestionShown, setDependentQuestionShown] = useState(false);
-  //const [questionOnScreen, setQuestionOnScreen] = useState({});
-  const { timerFunction, getQuestions,  questions, currentQuestion, getNextQuestion, getPreviousQuestion, dependentQuestion, dependentState, chooseQuestionForScreen, questionForScreen } = useContext(CampaignContext);
+  const { timerFunction, getQuestions,  questions, currentQuestion, getNextQuestion, getPreviousQuestion, dependentQuestion, dependentState, setDependentState } = useContext(CampaignContext);
  
-  //Dodati if kad se provjeri da li je na sigIn odabrano independent i postavi independentState na true
-  //if(independentState)
-  //  timerFunction();
   
   if (!campaign) {
     getQuestions();
@@ -38,17 +33,7 @@ const QuestionsScreen = ({ navigation }) => {
 
   timerFunction();
 
-  //chooseQuestionForScreen();
-
-  /*if(!dependentQuestionShown && dependentState) {
-    setQuestionOnScreen(dependentQuestion);
-  } else {
-    setQuestionOnScreen(questions[currentQuestion]);
-  }*/
-   console.log("State je" , dependentState);
-   console.log("QuestionShown je ",dependentQuestionShown);
-  if(!dependentQuestionShown && dependentState) {
-    
+  if(dependentState) {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -66,7 +51,7 @@ const QuestionsScreen = ({ navigation }) => {
           }
         </View>
       </View>
-    );//setDependentQuestionShown(true);
+    );
   } else {
     return (
       <View style={styles.container}>

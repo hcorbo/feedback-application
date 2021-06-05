@@ -34,7 +34,6 @@ export const CampaignProvider = (props) => {
         ]
     },
     ]);
-    const [questionForScreen, setQuestionForScreen] = useState(questions[currentQuestion]);
 
     const getQuestions = async () => {
         const campaignId = await AsyncStorage.getItem('CampaignID');
@@ -67,99 +66,23 @@ export const CampaignProvider = (props) => {
 
      
 
-    const getDependentQuestion = () => {
-        //console.log("depQuestion je ", dependentQuestion);
+    const getDependentQuestion = async () => {
         if(dependentQuestion == null && !dependentState) {
-            console.log("Dependent");
-            setDependentQuestion( {
-                "QuestionId": 6,
-                "QuestionType": "Scale",
-                "QuestionText": "Koliko ste zadovoljni cijenama?",
-                "IsDependent": false,
-                "Data1": null,
-                "Data2": null,
-                "Data3": null,
-                "QuestionAnswers": [
-                    {
-                        "QuestionId": 6,
-                        "AnswerId": 10,
-                        "Answer": {
-                            "AnswerId": 10,
-                            "AnswerText": "5",
-                            "IsAPicture": false,
-                            "Base64": null
+            fetch("https://si-projekat2.herokuapp.com/api/device/dependent/get/1", {
+                    method: 'GET',
+                }).then(res => res.json())
+                    .then(res => {
+                        console.log("DEPENDENT RESPONSE");
+                        console.log("Ping" + ping);
+                        if(res != null && !dependentState) {
+                            setDependentQuestion(res.Questions[0]);
+                            setDependentState(true);
                         }
-                    }
-                ]
+                       
             });
-            setDependentState(true);
-            console.log("Dep state je ", dependentState);
         }
-        
-        /*async () => {
- 
-        fetch("https://si-projekat2.herokuapp.com/api/device/dependent/get/1", {
-            method: 'GET',
-        }).then(res => res.json())
-            .then(res => {
-                console.log("DEPENDENT RESPONSE");
-                console.log("Ping" + ping);
-                if(res != null && !dependentState) {
-                    setDependentQuestion(res);
-                    setDependentState(true);
-                }
-               
-            });*/
-            
-
     }
 
-
-    /*const saveAnswer = async () => {
-        const campaignId = await AsyncStorage.getItem('CampaignID');
-        const deviceId = await AsyncStorage.getItem('DeviceId');
-
-        var data = [];
-        for (var i = 0; i < userResponses.length; i++) {
-            if (i == userResponses.length - 1) {
-                try {
-                    let response = await fetch("https://si-main-server.herokuapp.com/api/device/response/save", {
-                        method: 'POST',
-                        headers: {
-                            'Content-type': 'application/json; charset=UTF-8',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            "CampaignId": campaignId,
-                            "DeviceId": deviceId,
-                            "UserResponses": data
-                        })
-                    });
-                    var json = await response.json();
-                    console.log(json)
-                } catch (error) {
-                    console.error(error);
-                }
-            }
-            if (userResponses[i].CustomAnswer != null) {
-                data.push({
-                    "QuestionId": userResponses[i].QuestionId,
-                    "AnswerId": -1,
-                    "CustomAnswer": userResponses[i].CustomAnswer
-                })
-            } else {
-                data.push({
-                    "QuestionId": userResponses[i].QuestionId,
-                    "AnswerId": userResponses[i].AnswerId,
-                    "CustomAnswer": null
-                })
-            }
-        }
-        console.log(JSON.stringify({
-            "CampaignId": campaignId,
-            "UserResponses": data
-        }))  
-    }*/
 
     const saveAnswer = async () => {
         const campaignId = await AsyncStorage.getItem('CampaignID');
@@ -209,96 +132,6 @@ export const CampaignProvider = (props) => {
     }
 
 
-    /*const saveDependentAnswer = async () => {
-        var data = [];
-        for (var i = 0; i < userDependentResponses.length; i++) {
-            if (i == userDependentResponses.length - 1) {
-                try {
-                    let response = await fetch("https://si-main-server.herokuapp.com/api/device/response/save", {
-                        method: 'POST',
-                        headers: {
-                            'Content-type': 'application/json; charset=UTF-8',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            "CampaignId": 1,
-                            "UserResponses": data
-                        })
-                    });
-                    var json = await response.json();
-                    console.log(json)
-                } catch (error) {
-                    console.error(error);
-                }
-            }
-           if (userDependentResponses[i].CustomAnswer != null) {
-               data.push({
-                   "QuestionId": useuserDependentResponsesResponses[i].QuestionId,
-                   "AnswerId": -1,
-                   "CustomAnswer": userDependentResponses[i].CustomAnswer
-               })
-           } else {
-                data.push({
-                    "QuestionId": userDependentResponses[i].QuestionId,
-                    "AnswerId": userDependentResponses[i].AnswerId,
-                    "CustomAnswer": null
-                })
-           }
-        }
-        console.log(JSON.stringify({
-            "CampaignId": 1,
-            "UserResponses": data
-        }))
-      
-    }*/
-
-    /*const saveDependentAnswer = async () => {
-        const campaignId = await AsyncStorage.getItem('CampaignID');
-        const deviceId = await AsyncStorage.getItem('DeviceId');
-
-        var data = [];
-        for (var i = 0; i < userDependentResponses.length; i++) {
-            if (i == userDependentResponses.length - 1) {
-                try {
-                    let response = await fetch("https://si-projekat2.herokuapp.com/api/device/response/save", {
-                        method: 'POST',
-                        headers: {
-                            'Content-type': 'application/json; charset=UTF-8',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            "CampaignId": campaignId,
-                            "DeviceId": deviceId,
-                            "UserResponses": data
-                        })
-                    });
-                    var json = await response.json();
-                    console.log(json)
-                } catch (error) {
-                    console.error(error);
-                }
-            }
-            if (userDependentResponses[i].CustomAnswer != null) {
-                data.push({
-                    "QuestionId": userDependentResponses[i].QuestionId,
-                    "AnswerId": -1,
-                    "CustomAnswer": userDependentResponses[i].CustomAnswer
-                })
-            } else {
-                data.push({
-                    "QuestionId": userDependentResponses[i].QuestionId,
-                    "AnswerId": userDependentResponses[i].AnswerId,
-                    "CustomAnswer": null
-                })
-            }
-        }
-        console.log(JSON.stringify({
-            "CampaignId": campaignId,
-            "UserResponses": data
-        }))
-
-    }*/
-
     const addAnswer = (answer) => {
         let id;
         Array.isArray(answer) ? id = answer[0].QuestionId : id = answer.QuestionId;
@@ -316,8 +149,15 @@ export const CampaignProvider = (props) => {
     
 
     const getNextQuestion = () => {
-        if (currentQuestion < questions.length - 1) {
-            setCurrentQuestion(currentQuestion+1);
+        if (currentQuestion < questions.length - 1 || dependentState==true) {
+            if(questions[currentQuestion+1].QuestionId == dependentQuestion.QuestionId && !(currentQuestion < questions.length - 2))
+                return true;
+            if(questions[currentQuestion+1].QuestionId == dependentQuestion.QuestionId)
+                setCurrentQuestion(currentQuestion+2);
+            else if(dependentState!=true)
+                setCurrentQuestion(currentQuestion+1);
+            else 
+                setDependentState(false)
             console.log("TRENUTNO STANJE " + currentQuestion)
             return false;
         }
@@ -330,26 +170,11 @@ export const CampaignProvider = (props) => {
         setUserDependentResponses([]);
     }
 
-   /* const getNextDependentQuestion = () => {
-        if (currentDependentQuestion < dependentQuestions.length - 1){
-            setCurrentDependentQuestion(currentDependentQuestion + 1);
-            return false;
-        }
-        return true;
-    };*/
 
     const getPreviousQuestion = () => {
         if (currentQuestion > 0)
             setCurrentQuestion(currentQuestion - 1);
     };
-
-    const chooseQuestionForScreen = () => {
-        if(!dependentQuestionShown && dependentState) {
-            setQuestionForScreen(dependentQuestion);
-          } else {
-            setQuestionForScreen(questions[currentQuestion]);
-          }
-    }
 
 
     const values = {
@@ -372,8 +197,7 @@ export const CampaignProvider = (props) => {
         timerFunction,
         setCurrentQuestion,
         resetUserData,
-        chooseQuestionForScreen,
-        questionForScreen
+        setDependentState
     }
 
     return (
