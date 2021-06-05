@@ -334,10 +334,14 @@ export const CampaignProvider = (props) => {
             console.log("TRENUTNO STANJE " + currentQuestion)
             return false;
         }
-        saveAnswer();
-        saveDependentAnswer();
         return true;
     };
+
+    const resetUserData = () => {
+        setCurrentQuestion(0);
+        setUserResponses([]);
+        setUserDependentResponses([]);
+    }
 
    /* const getNextDependentQuestion = () => {
         if (currentDependentQuestion < dependentQuestions.length - 1){
@@ -373,7 +377,8 @@ export const CampaignProvider = (props) => {
         saveAnswer,
         timerFunction,
         independentState,
-        setCurrentQuestion
+        setCurrentQuestion,
+        resetUserData
     }
 
     return (

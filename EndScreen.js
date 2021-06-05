@@ -1,4 +1,4 @@
-import React ,{ useContext }from 'react';
+import React ,{ useContext, useEffect }from 'react';
 import {
   View,
   Text,
@@ -15,7 +15,21 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { CampaignContext } from './contexts/CampaignContext'
  
 const EndScreen = ({ navigation }) => {
-    const { saveAnswer, saveDependentAnswer } = useContext(CampaignContext);
+  const { saveAnswer, saveDependentAnswer, resetUserData } = useContext(CampaignContext);
+
+  useEffect(() => {
+    async function startNewSession()
+    {
+      await saveAnswer();
+      await saveDependentAnswer();
+      resetUserData();
+    }
+    startNewSession();
+    setTimeout(() => {
+        navigation.navigate("QuestionsScreen");
+      }, 3000);
+  }, [])
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
