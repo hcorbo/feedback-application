@@ -36,7 +36,7 @@ const TextQuestionScreen = ({ question, navigation }) => {
           placeholder="Vaš odgovor..."
           onChangeText={(value) => { setAnswerText(value); }}
           value={answerText}
-          onSubmitEditing={(event) => nextQuestion()}
+          onSubmitEditing={nextQuestion}
           style={styles.input}></TextInput>
       </View>
       <ButtonContainer answer={null} navigation={navigation} />

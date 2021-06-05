@@ -285,6 +285,7 @@ const SignInScreen = ({navigation}) => {
                         
                         try {
                             let URL = data.IPAdress + "api/device/activate/" + data.installationCode;
+
                             const response = await axios.post(URL,data);       
                             if(response.status == 200 && response.data.Name && response.data.DeviceId && response.data.CampaignID){                                
                                 try{

@@ -1,8 +1,16 @@
 import React, { useState, useContext } from 'react'
-import { Text, View, StyleSheet, FlatList, Image, TouchableWithoutFeedback, SafeAreaView } from 'react-native';
+import {
+  Text,
+  View,
+  Dimensions,
+  StyleSheet,
+  Image,
+  TouchableOpacity
+} from 'react-native';
 import ButtonContainer from '../ButtonContainer';
-import ModalDropdown from 'react-native-modal-dropdown'
 import { CampaignContext } from '../contexts/CampaignContext'
+import * as Animatable from 'react-native-animatable';
+import {LinearGradient} from "expo-linear-gradient";
 
 const SingleAnswerQuestionScreen = ({ question, navigation }) => {
   const [answer, setAnswer] = useState({});
@@ -17,48 +25,43 @@ const SingleAnswerQuestionScreen = ({ question, navigation }) => {
     else getNextQuestion();
   };
 
-  const Item = ({ item }) => (
-    <TouchableWithoutFeedback onPress={() => { setAnswer(item.AnswerId); }} >
-      <Image
-        style={styles.image}
-        source={{ uri: `data:image/gif;base64,${item.Answer.AnswerText}` }}
-      />
-    </TouchableWithoutFeedback>
-  )
-
-  const renderItem = ({ item }) => (
-    <Item item={item} />
-  );
-
   return (
     <View>
-      <View style={styles.question}>
-        <Text style={styles.questionText}>{question.QuestionText}</Text>
 
-        {question.QuestionAnswers[0].Answer.IsApicture === true ?
-          <View style={styles.flatlist}>
-            <FlatList
-              data={data}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.AnswerId}
-              style={{ flex: 1 }}
-              numColumns={2}
-            />
+        <Animatable.View style={styles.header}
+                         animation="bounceIn"
+                         duraton="1500"
+        >
+          <View style={styles.question}>
+            <Text style={styles.text_question}>{question.QuestionText}</Text>
+            <View style={styles.action}>
+              {
+                data.map((answer) => (
+                    <TouchableOpacity
+                        key={answer.AnswerId}
+                        style={answer.Answer.IsAPicture ? [styles.button, {height: 90. / data.length + '%'}] : [styles.button, {height: 60. / data.length + '%'}]}
+                        onPress={() => nextQuestion(answer.AnswerId)}
+                    >
+                      {!answer.Answer.IsAPicture &&
+                      <LinearGradient
+                          colors={['#ededed', '#d3d3d3']}
+                          style={[styles.gradient_button]}>
+                        <Text style={styles.text_answer}>{answer.Answer.AnswerText}</Text>
+                      </LinearGradient>}
+                      {answer.Answer.IsAPicture &&
+                      <Image
+                          style={[styles.button_image]}
+                          resizeMode="stretch"
+                          source={{ uri: "data:image/png;base64," + answer.Answer.Base64 }}>
+                      </Image>}
+                    </TouchableOpacity>
+                ))
+              }
+            </View>
           </View>
-          : <ModalDropdown
-            options={data}
-            renderRowText={(options) => { return options.Answer.AnswerText }}
-            renderButtonText={(options) => { return options.Answer.AnswerText }}
-            style={styles.dropdown}
-            textStyle={styles.text}
-            defaultValue={'Izaberite..'}
-            isFullWidth={true}
-            dropdownTextStyle={styles.dropdownTextStyle}
-            onSelect={async(index, value) => { nextQuestion(value.AnswerId); }}
-          />}
-      </View>
+        </Animatable.View>
+        <ButtonContainer answer={{ "QuestionId": question.QuestionId, "AnswerId": answer, "CustomAnswer": null }} navigation={navigation}/>
 
-      <ButtonContainer answer={null} navigation={navigation} />
     </View>
   )
 };
@@ -66,35 +69,58 @@ const SingleAnswerQuestionScreen = ({ question, navigation }) => {
 export default SingleAnswerQuestionScreen;
 
 const styles = StyleSheet.create({
+  header: {
+    margin: 20,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    alignItems: 'center',
+    alignContent: 'center',
+    borderRadius: 20,
+    paddingTop: 30,
+    paddingBottom: 30,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
   question: {
     height: '90%',
     justifyContent: 'center',
   },
-  flatlist: {
-    flexDirection: 'row',
+  text_answer: {
+    color: '#000',
+    fontSize: 25
   },
-  dropdown: {
-    backgroundColor: '#ffffff',
-    marginTop: 10,
-    maxWidth: 300
+  action: {
+    flexDirection: 'column',
+    justifyContent: 'space-evenly'
   },
-  text: {
-    textAlign: 'center',
-    fontSize: 18,
+  button_container: {
+    flexDirection: "row"
   },
-  dropdownTextStyle: {
-    color: '#000000',
-    fontSize: 15
-  },
-  image: {
-    margin: 5,
-    height: 100,
-    width: 100,
-  },
-  questionText: {
-    paddingBottom: 40,
-    fontSize: 20,
+  text_question: {
+    color: "#fff",
+    padding: 20,
+    fontSize: 25,
     alignSelf: 'center',
-    color: '#fff',
-  }
+    textAlign: 'center'
+  },
+  button: {
+    alignSelf: 'center',
+    width: '100%',
+    padding: 2
+  },
+  gradient_button: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    padding: 2
+  },
+  button_image: {
+    alignSelf: 'center',
+    height: '100%',
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 10,
+  },
 });
+

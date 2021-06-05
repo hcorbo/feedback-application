@@ -73,7 +73,7 @@ export const CampaignProvider = (props) => {
             });
 
         const PingIntervalValue = await  AsyncStorage.getItem('PingInterval');
-        setPing(PingIntervalValue);
+        setPing(5000);
     }
 
 
@@ -313,18 +313,35 @@ export const CampaignProvider = (props) => {
 
     
     const addDependentAnswer = (answer) => {
-        let rows;
-        Array.isArray(answer) ? rows = [...userDependentResponses, ...answer] : rows = [...userDependentResponses, answer];
+        let id;
+        Array.isArray(answer) ? id = answer[0].QuestionId : id = answer.QuestionId;
+
+        let rows = userDependentResponses;
+        rows = rows.filter(response => response.QuestionId != id);
+
+        if (Array.isArray(answer)) answer.shift();
+
+        let rows2;
+        Array.isArray(answer) ? rows2 = [...rows, ...answer] : rows2 = [...rows, answer];
+        // let rows;
+        // Array.isArray(answer) ? rows = [...userDependentResponses, ...answer] : rows = [...userDependentResponses, answer];
         setUserDependentResponses(rows);
     };
 
     const getNextQuestion = () => {
         if (currentQuestion < questions.length - 1) {
-            setCurrentQuestion(currentQuestion + 1);
+            setCurrentQuestion(currentQuestion+1);
+            console.log("TRENUTNO STANJE " + currentQuestion)
             return false;
         }
         return true;
     };
+
+    const resetUserData = () => {
+        setCurrentQuestion(0);
+        setUserResponses([]);
+        setUserDependentResponses([]);
+    }
 
    /* const getNextDependentQuestion = () => {
         if (currentDependentQuestion < dependentQuestions.length - 1){
@@ -360,7 +377,8 @@ export const CampaignProvider = (props) => {
         saveAnswer,
         timerFunction,
         independentState,
-        setCurrentQuestion
+        setCurrentQuestion,
+        resetUserData
     }
 
     return (
