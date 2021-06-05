@@ -22,36 +22,57 @@ import { useEffect } from 'react';
 const QuestionsScreen = ({ navigation }) => {
   
   const [campaign, setCampaign] = useState(false);
-
-  const { timerFunction, componentDidMount, getQuestions, getDependentQuestions, questions, currentQuestion, getNextQuestion, getPreviousQuestion, independentState } = useContext(CampaignContext);
+  const { timerFunction, getQuestions,  questions, currentQuestion, getNextQuestion, getPreviousQuestion, dependentQuestion, dependentState, setDependentState } = useContext(CampaignContext);
  
-  //Dodati if kad se provjeri da li je na sigIn odabrano independent i postavi independentState na true
-  //if(independentState)
-  //  timerFunction();
   
   if (!campaign) {
     getQuestions();
     setCampaign(true);
   }
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        {questions[currentQuestion].QuestionType == "Single" &&
-          <SingleAnswerQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
-        }
-        {questions[currentQuestion].QuestionType == "Scale" &&
-          <ScaleQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
-        }
-        {questions[currentQuestion].QuestionType == "Text" &&
-          <TextQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
-        }
-        {questions[currentQuestion].QuestionType == "Multiple" &&
-          <MultipleChoiceQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
-        }
+
+  timerFunction();
+
+  if(dependentState) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          {dependentQuestion.QuestionType == "Single" &&
+            <SingleAnswerQuestionScreen question={dependentQuestion} navigation={navigation} />
+          }
+          {dependentQuestion.QuestionType == "Scale" &&
+            <ScaleQuestionScreen question={dependentQuestion} navigation={navigation} />
+          }
+          {dependentQuestion.QuestionType == "Text" &&
+            <TextQuestionScreen question={dependentQuestion} navigation={navigation} />
+          }
+          {dependentQuestion.QuestionType == "Multiple" &&
+            <MultipleChoiceQuestionScreen question={dependentQuestion} navigation={navigation} />
+          }
+        </View>
       </View>
-    </View>
-  );
+    );
+  } else {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          {questions[currentQuestion].QuestionType == "Single" &&
+            <SingleAnswerQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
+          }
+          {questions[currentQuestion].QuestionType == "Scale" &&
+            <ScaleQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
+          }
+          {questions[currentQuestion].QuestionType == "Text" &&
+            <TextQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
+          }
+          {questions[currentQuestion].QuestionType == "Multiple" &&
+            <MultipleChoiceQuestionScreen question={questions[currentQuestion]} navigation={navigation} />
+          }
+        </View>
+      </View>
+    );
+  }
+  
 };
 
 export default QuestionsScreen;
