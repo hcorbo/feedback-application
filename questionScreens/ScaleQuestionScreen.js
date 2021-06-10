@@ -9,6 +9,9 @@ const ScaleQuestionScreen = ({ question, navigation }) => {
   const [previousValue, setPreviousValue] = useState(false);
   const { addAnswer, getNextQuestion, userResponses } = useContext(CampaignContext);
 
+  const [min, setMin] = useState(Number(question.QuestionAnswers[0].Answer.AnswerText.charAt(0)));
+  const [max, setMax] = useState(Number(question.QuestionAnswers[0].Answer.AnswerText.charAt(2)));
+
   let number = 1;
   let response = userResponses.find(response => response.QuestionId == question.QuestionId);
   try {
@@ -35,8 +38,8 @@ const ScaleQuestionScreen = ({ question, navigation }) => {
         <View >
           <Slider
             style={{ width: 300, height: 80, alignSelf: 'center', }}
-            minimumValue={1}
-            maximumValue={10}
+            minimumValue={min}
+            maximumValue={max}
             thumbStyle={{ width: 30, height: 50 }}
             trackStyle={{ height: 50 }}
             value={Number(state)}
@@ -48,9 +51,9 @@ const ScaleQuestionScreen = ({ question, navigation }) => {
           />
         </View>
         <View style={styles1.question}>
-          <Text>1</Text>
+          <Text>{min}</Text>
           <Text> {state}</Text>
-          <Text>10</Text>
+          <Text>{max}</Text>
         </View>
       </View>
       <ButtonContainer answer={null} navigation={navigation} />
