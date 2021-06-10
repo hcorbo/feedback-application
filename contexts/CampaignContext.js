@@ -75,7 +75,7 @@ export const CampaignProvider = (props) => {
                     .then(res => {
                         console.log("DEPENDENT RESPONSE");
                         console.log("Ping" + ping);
-                        if(res != null && !dependentState) {
+                        if(typeof res.Questions !== "undefined" && !dependentState) {
                             setDependentQuestion(res.Questions[0]);
                             setDependentState(true);
                         }
@@ -195,7 +195,7 @@ export const CampaignProvider = (props) => {
     const resetUserData = () => {
         setCurrentQuestion(0);
         setUserResponses([]);
-        setUserDependentResponses([]);
+     //   setUserDependentResponses([]);
     }
 
 

@@ -12,7 +12,7 @@ const ScaleQuestionScreen = ({ question, navigation }) => {
   const [min, setMin] = useState(Number(question.QuestionAnswers[0].Answer.AnswerText.charAt(0)));
   const [max, setMax] = useState(Number(question.QuestionAnswers[0].Answer.AnswerText.charAt(2)));
 
-  let number = 1;
+  let number = min;
   let response = userResponses.find(response => response.QuestionId == question.QuestionId);
   try {
     number = Number(response.CustomAnswer);

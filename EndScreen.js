@@ -21,7 +21,7 @@ const EndScreen = ({ navigation }) => {
     async function startNewSession()
     {
       await saveAnswer();
-      await saveDependentAnswer();
+ //     await saveDependentAnswer();
       resetUserData();
     }
     startNewSession();
