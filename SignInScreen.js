@@ -219,7 +219,34 @@ const SignInScreen = ({navigation}) => {
                 </TouchableOpacity>
             </View>
 
+           
             <Text style={[styles.text_footer, {
+                color: "black", marginTop: 35
+            }]}>Question Type</Text>
+            <View style={styles.action}>
+                <FontAwesome 
+                    name="question-circle-o"
+                    color={"black"}
+                    size={20}
+                />
+                <RadioButton
+                    style={{marginRight: 50}}
+                    value="independent"
+                    status={ checked === 'independent' ? 'checked' : 'unchecked' }
+                    onPress={() => setChecked('independent')}
+                />
+                <Text style={styles.text_footer}>Independent</Text>
+                <RadioButton
+                    value="dependent"
+                    status={ checked === 'dependent' ? 'checked' : 'unchecked' }
+                    onPress={() => setChecked('dependent')}
+                />
+                <Text style={styles.text_footer}>Dependent</Text>
+                
+            </View>
+           
+
+            {checked == 'dependent' ? <View><Text style={[styles.text_footer, {
                 color: "black", marginTop: 35
             }]}>Ping Interval</Text>
             <View style={styles.action}>
@@ -251,32 +278,9 @@ const SignInScreen = ({navigation}) => {
                 </Animatable.View>
                 : null}
             </View>
+            </View> : <View></View>
+            }
 
-            <Text style={[styles.text_footer, {
-                color: "black", marginTop: 35
-            }]}>Question Type</Text>
-            <View style={styles.action}>
-                <FontAwesome 
-                    name="question-circle-o"
-                    color={"black"}
-                    size={20}
-                />
-                <RadioButton
-                    style={{marginRight: 50}}
-                    value="independent"
-                    status={ checked === 'independent' ? 'checked' : 'unchecked' }
-                    onPress={() => setChecked('independent')}
-                />
-                <Text style={styles.text_footer}>Independent</Text>
-                <RadioButton
-                    value="dependent"
-                    status={ checked === 'dependent' ? 'checked' : 'unchecked' }
-                    onPress={() => setChecked('dependent')}
-                />
-                <Text style={styles.text_footer}>Dependent</Text>
-                
-            </View>
-           
             
             <View style={styles.button}>
                 <TouchableOpacity
