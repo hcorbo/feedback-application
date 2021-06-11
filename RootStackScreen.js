@@ -36,7 +36,7 @@ const RootStackScreen = ({ navigation }) => {
     return (
         <CampaignProvider>
             <RootStack.Navigator headerMode='none'>
-                {!checkConfigFile && <RootStack.Screen name="SignInScreen" component={SignInScreen} />}
+                <RootStack.Screen name="SignInScreen" component={SignInScreen} />
                 <RootStack.Screen name="QuestionsScreen" component={QuestionsScreen} />
                 <RootStack.Screen name="EndScreen" component={EndScreen} />
             </RootStack.Navigator>
