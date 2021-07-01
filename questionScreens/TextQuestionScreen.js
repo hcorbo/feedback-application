@@ -1,9 +1,32 @@
 import React, { useState, useContext } from 'react'
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import ButtonContainer from '../ButtonContainer';
+import { CampaignContext } from '../contexts/CampaignContext'
 
-const TextQuestionScreen = ({ question,navigation}) => {
-  const [answerText, setAnswerText] = useState({});
+const TextQuestionScreen = ({ question, navigation }) => {
+  const [answerText, setAnswerText] = useState("");
+  const [previousValue,setPreviousValue] = useState(false);
+
+  const { addAnswer, getNextQuestion, userResponses } = useContext(CampaignContext);
+
+  let text = "";
+  let response = userResponses.find(response => response.QuestionId == question.QuestionId);
+  try {
+    text = response.CustomAnswer;
+  } catch(error) {
+
+  }
+
+  if(!previousValue) {
+    setPreviousValue(true);
+    setAnswerText(text);
+  }
+
+  const nextQuestion = () => {
+    addAnswer({ "QuestionId": question.QuestionId, "AnswerId": null, "CustomAnswer": answerText });
+    if (getNextQuestion()) navigation.navigate('EndScreen');
+    else getNextQuestion();
+  };
 
   return (
     <View>
@@ -12,9 +35,11 @@ const TextQuestionScreen = ({ question,navigation}) => {
         <TextInput
           placeholder="Vaš odgovor..."
           onChangeText={(value) => { setAnswerText(value); }}
-          style = {styles.input}></TextInput>
+          value={answerText}
+          onSubmitEditing={nextQuestion}
+          style={styles.input}></TextInput>
       </View>
-      <ButtonContainer answer={{"QuestionId": question.QuestionId, "AnswerId": null, "CustomAnswer": answerText}} navigation={navigation} />
+      <ButtonContainer answer={null} navigation={navigation} />
     </View>
   )
 };
@@ -30,10 +55,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: 300,
     height: 100,
-    borderRadius: 10
+    borderRadius: 10,
+    fontSize: 16,
   },
   questionText: {
-    color: 'white',
-    fontSize: 18
+    paddingBottom: 40,
+    fontSize: 20,
+    alignSelf: 'center',
+    color: '#fff',
   }
 });

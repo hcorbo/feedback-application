@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const ButtonContainer = ({ answer,navigation}) => {
 
-    const { addAnswer, getNextQuestion, getPreviousQuestion } = useContext(CampaignContext);
+    const { globalState, setIndependentState, setQuestions, dependentQuestions, addAnswer, getNextQuestion, getPreviousQuestion, getQuestions, independentState, setCurrentQuestion, addDependentAnswer, timerFunction, questions, currentQuestion } = useContext(CampaignContext);
 
 
     return (
@@ -26,9 +26,29 @@ const ButtonContainer = ({ answer,navigation}) => {
                 </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { 
-                addAnswer(answer); 
+                // if(independentState){
+                //     if(questions[currentQuestion].QuestionType === "Multiple")  addDependentAnswer(answer); 
+                //     else addDependentAnswer(answer);
+                // } else {
+                //     if(questions[currentQuestion].QuestionType === "Multiple")  addAnswer(answer); 
+                //     else addAnswer(answer);
+                // }
+                // //if( independentState) setQuestions(dependentQuestions);
+                // if(getNextQuestion() && independentState) { 
+                //     console.log("DOSAO SAM TU")
+                //     //setCurrentQuestion(0);
+                //     //timerFunction();
+                //     getQuestions(); 
+                     
+                // } 
+                // else if(getNextQuestion()) {
+                //     navigation.navigate('EndScreen'); 
+                // }
+                if(questions[currentQuestion].QuestionType === "Multiple")  addAnswer(answer); 
                 if(getNextQuestion()) navigation.navigate('EndScreen'); 
                 else getNextQuestion();
+             
+
             }}>
                 <LinearGradient
                     colors={['#ededed', '#d3d3d3']}
@@ -40,6 +60,17 @@ const ButtonContainer = ({ answer,navigation}) => {
                         color="#000000"
                         size={20}
                     />
+                </LinearGradient>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => { 
+            //    addAnswer(answer); 
+                navigation.navigate('EndScreen'); 
+            }}>
+                <LinearGradient
+                    colors={['#ededed', '#d3d3d3']}
+                    style={styles.button}
+                >
+                    <Text style={styles.textButton}>End</Text>
                 </LinearGradient>
             </TouchableOpacity>
 
@@ -65,6 +96,6 @@ const styles = StyleSheet.create({
     buttonsContainer: {
         // flex: 1,
         flexDirection: "row",
-        justifyContent: "space-evenly"
+        justifyContent: "center"
     }
 });

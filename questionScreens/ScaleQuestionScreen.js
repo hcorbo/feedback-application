@@ -1,33 +1,63 @@
 import React, { useState, useContext } from 'react'
 import { Text, View, StyleSheet } from 'react-native';
 import ButtonContainer from '../ButtonContainer';
-import Slider from '@react-native-community/slider';
+import Slider from "react-native-smooth-slider";
 import { CampaignContext } from '../contexts/CampaignContext'
 
-const ScaleQuestionScreen = ({ question,navigation }) => {
-  const [answer, setAnswer] = useState({});
-  const [state, setState] = useState(0)
+const ScaleQuestionScreen = ({ question, navigation }) => {
+  const [state, setState] = useState(1);
+  const [previousValue, setPreviousValue] = useState(false);
+  const { addAnswer, getNextQuestion, userResponses } = useContext(CampaignContext);
+
+  const [min, setMin] = useState(Number(question.QuestionAnswers[0].Answer.AnswerText.charAt(0)));
+  const [max, setMax] = useState(Number(question.QuestionAnswers[0].Answer.AnswerText.charAt(2)));
+
+  let number = min;
+  let response = userResponses.find(response => response.QuestionId == question.QuestionId);
+  try {
+    number = Number(response.CustomAnswer);
+  } catch (error) {
+
+  }
+
+  if (!previousValue) {
+    setPreviousValue(true);
+    setState(number);
+  }
+
+  const nextQuestion = () => {
+    addAnswer({ "QuestionId": question.QuestionId, "AnswerId": -1, "CustomAnswer": state });
+    if (getNextQuestion()) navigation.navigate('EndScreen');
+    else getNextQuestion();
+  };
 
   return (
     <View>
       <View style={styles.question}>
-        <Text>{question.QuestionText}</Text>
-        <Slider
-          style={{ width: 300, height: 40 }}
-          minimumValue={0}
-          maximumValue={1}
-          onValueChange={(value) => setState(value)}
-          value={state}
-          minimumTrackTintColor="#FFFFFF"
-          maximumTrackTintColor="#000000"
-        />
+        <Text style={styles1.text}>{question.QuestionText}</Text>
+        <View >
+          <Slider
+            style={{ width: 300, height: 80, alignSelf: 'center', }}
+            minimumValue={min}
+            maximumValue={max}
+            thumbStyle={{ width: 30, height: 50 }}
+            trackStyle={{ height: 50 }}
+            value={Number(state)}
+            onValueChange={(value) => setState(value.toFixed(0))}
+            onSlidingComplete={nextQuestion}
+            thumbTintColor="#f0eff3"
+            minimumTrackTintColor="#FFFFFF"
+            maximumTrackTintColor="#000000"
+          />
+        </View>
         <View style={styles1.question}>
-          <Text>0</Text>
-          <Text> {state.toFixed(2)}</Text>
-          <Text>1</Text>
+          <Text>{min}</Text>
+          <Text> {state}</Text>
+          <Text>{max}</Text>
         </View>
       </View>
-      <ButtonContainer answer={{ "QuestionId": question.QuestionId, "AnswerId": -1, "CustomAnswer": state }} navigation={navigation}/>
+      <ButtonContainer answer={null} navigation={navigation} />
+
     </View>
   )
 };
@@ -37,7 +67,8 @@ export default ScaleQuestionScreen;
 const styles = StyleSheet.create({
   question: {
     height: '90%',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    padding: 15,
   },
 });
 const styles1 = StyleSheet.create({
@@ -46,4 +77,20 @@ const styles1 = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
+  text: {
+    paddingBottom: 40,
+    fontSize: 20,
+    alignSelf: 'center',
+    color: '#fff',
+  }
+});
+
+const styles2 = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginLeft: 10,
+    marginRight: 10,
+    alignItems: "stretch",
+    justifyContent: "center"
+  }
 });

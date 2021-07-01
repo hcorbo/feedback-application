@@ -14,10 +14,10 @@ import Feather from 'react-native-vector-icons/Feather';
 import { RadioButton } from 'react-native-paper';
 
 import {AsyncStorage} from 'react-native';
+import axios from 'axios';
+
 
 const SignInScreen = ({navigation}) => {
-
-    
 
     const [data, setData] = React.useState({
         IPAdress: '',
@@ -34,19 +34,6 @@ const SignInScreen = ({navigation}) => {
         getData();
     }, [])
 
-    const storeData = async () => {
-        try{
-            console.log('kod ' + data.installationCode);
-            await AsyncStorage.setItem('IPAdress', data.IPAdress);
-            await AsyncStorage.setItem('InstallationCode', data.installationCode);
-            await AsyncStorage.setItem('PingInterval', data.ping);
-            await AsyncStorage.setItem('QuestionType', checked);
-        }
-        catch(e){
-            console.log('Spasavanje u AsyncStorage neuspjesno!');
-            console.log(e);
-        }
-    }
 
     const getData = async () => {
         try{
@@ -54,8 +41,6 @@ const SignInScreen = ({navigation}) => {
             const InstallationCodeValue = await AsyncStorage.getItem('InstallationCode');
             const PingIntervalValue = await  AsyncStorage.getItem('PingInterval');
             const QuestionType = await  AsyncStorage.getItem('QuestionType');
-
-            
 
             if(IPAdressValue != null && InstallationCodeValue != null && PingIntervalValue != null){
 
@@ -68,11 +53,6 @@ const SignInScreen = ({navigation}) => {
                     isValidUser: true
                 });
 
-                console.log('Vrijednost iz AsyncStorage: \n');
-                console.log('Ip adresa iz AS: ' + IPAdressValue);    
-                console.log('Installation code iz AS ' + InstallationCodeValue);    
-                console.log('Ping interval iz AS: ' + PingIntervalValue);
-                console.log('Question type iz AS: ' + QuestionType);
                 setData({
                     ...data,
                     IPAdress: IPAdressValue,
@@ -150,6 +130,7 @@ const SignInScreen = ({navigation}) => {
     }
 
     const [checked, setChecked] = React.useState('independent');
+
 
     return (
       <View style={styles.container}>
@@ -238,7 +219,34 @@ const SignInScreen = ({navigation}) => {
                 </TouchableOpacity>
             </View>
 
+           
             <Text style={[styles.text_footer, {
+                color: "black", marginTop: 35
+            }]}>Question Type</Text>
+            <View style={styles.action}>
+                <FontAwesome 
+                    name="question-circle-o"
+                    color={"black"}
+                    size={20}
+                />
+                <RadioButton
+                    style={{marginRight: 50}}
+                    value="independent"
+                    status={ checked === 'independent' ? 'checked' : 'unchecked' }
+                    onPress={() => setChecked('independent')}
+                />
+                <Text style={styles.text_footer}>Independent</Text>
+                <RadioButton
+                    value="dependent"
+                    status={ checked === 'dependent' ? 'checked' : 'unchecked' }
+                    onPress={() => setChecked('dependent')}
+                />
+                <Text style={styles.text_footer}>Dependent</Text>
+                
+            </View>
+           
+
+            {checked == 'dependent' ? <View><Text style={[styles.text_footer, {
                 color: "black", marginTop: 35
             }]}>Ping Interval</Text>
             <View style={styles.action}>
@@ -270,60 +278,40 @@ const SignInScreen = ({navigation}) => {
                 </Animatable.View>
                 : null}
             </View>
+            </View> : <View></View>
+            }
 
-            <Text style={[styles.text_footer, {
-                color: "black", marginTop: 35
-            }]}>Question Type</Text>
-            <View style={styles.action}>
-                <FontAwesome 
-                    name="question-circle-o"
-                    color={"black"}
-                    size={20}
-                />
-                <RadioButton
-                    style={{marginRight: 50}}
-                    value="independent"
-                    status={ checked === 'independent' ? 'checked' : 'unchecked' }
-                    onPress={() => setChecked('independent')}
-                />
-                <Text style={styles.text_footer}>Independent</Text>
-                <RadioButton
-                    value="dependent"
-                    status={ checked === 'dependent' ? 'checked' : 'unchecked' }
-                    onPress={() => setChecked('dependent')}
-                />
-                <Text style={styles.text_footer}>Dependent</Text>
-                
-            </View>
-           
             
             <View style={styles.button}>
                 <TouchableOpacity
                     style={styles.signIn}
-                    onPress={() => {
-                        /*
-                        //cekamo da proradi server da testiramo
-                            try {
-                              const response = await axios.post(URL_SERVERA,{
-                                IPAdress:data.IPAdress,
-                                installationCode:data.installationCode
-                              });        
-                              if(response.status == 200){
-                                navigation.navigate("HomeScreen");
-                              }else{
-                                alert("Greška!");
-                              }
-                            } catch (error) {
-                              alert("Greška!");
-                            }
-                          */
-                        navigation.navigate("HomeScreen");
-                        storeData();
+                    onPress={async () => {
                         
-                }
-                
-                    
-                }
+                        try {
+                            let URL = data.IPAdress + "api/device/activate/" + data.installationCode;
+
+                            const response = await axios.post(URL,data);       
+                            if(response.status == 200 && response.data.Name && response.data.DeviceId && response.data.CampaignID){                                
+                                try{
+                                    await AsyncStorage.setItem('IPAdress', data.IPAdress);
+                                    await AsyncStorage.setItem('PingInterval', data.ping.toString());
+                                    await AsyncStorage.setItem('QuestionType', checked);
+                                    await AsyncStorage.setItem('Name', response.data.Name);
+                                    await AsyncStorage.setItem('DeviceId', response.data.DeviceId.toString());
+                                    await AsyncStorage.setItem('CampaignID', response.data.CampaignID.toString());
+                                }
+                                catch(e){
+                                    console.log('Spasavanje u AsyncStorage neuspjesno!');
+                                    console.log(e);
+                                }
+                                navigation.navigate("QuestionsScreen");
+                            }else{
+                                alert("Greška!");
+                            }
+                        } catch (error) {
+                            alert("Greška!");
+                        }   
+                    }}
                 >
                 <LinearGradient
                     colors={['#08d4c4', '#01ab9d']}
